@@ -1,0 +1,37 @@
+<!-- loading -->
+<div class="loading" *ngIf="loading">Loading&#8230;</div>
+
+<aside class="left-sidebar">
+	<!-- Sidebar scroll-->
+	<div class="scroll-sidebar ps ps--theme_default ps--active-y" data-ps-id="134cfcd2-b729-3468-b05c-0048bd3a2b26">
+		<!-- Sidebar navigation-->
+		<nav class="sidebar-nav">
+			<ul id="sidebarnav">
+				<li *ngFor="let menu of lstMenu;index as i"> 
+					<a *ngIf="menu.isSubmenu === 0" class="waves-effect waves-dark" aria-expanded="false" routerLink="{{menu.urlPath}}" routerLinkActive="active">
+						<i class="icon-speedometer"></i>
+						<span class="hide-menu" translate>{{menu.name}}</span>
+					</a>
+
+					<a *ngIf="menu.isSubmenu === 1" class="waves-effect waves-dark" id="menu-{{i}}" aria-expanded="false" (click)="expanMenu(i,menu)" [ngClass]="{'has-arrow': menu.isSubmenu === 1}">
+						<i class="{{menu.icon}}"></i>
+						<span class="hide-menu" translate>{{menu.name}}</span>
+					</a>
+					<ul aria-expanded="false" id="submenu-{{i}}" class="collapse" *ngIf="menu.lstSubmenu.length > 0">
+						<li *ngFor="let submenu of menu.lstSubmenu;index as i">
+							<a routerLink="{{submenu.urlPath}}" routerLinkActive="active" translate>{{submenu.name}}</a>
+						</li>
+					</ul>
+				</li>
+			</ul>
+		</nav>
+		<!-- End Sidebar navigation -->
+		<div class="ps__scrollbar-x-rail" style="left: 0px; bottom: 0px;">
+			<div class="ps__scrollbar-x" tabindex="0" style="left: 0px; width: 0px;"></div>
+		</div>
+		<div class="ps__scrollbar-y-rail" style="top: 0px; height: 877px; right: 0px;">
+			<div class="ps__scrollbar-y" tabindex="0" style="top: 0px; height: 778px;"></div>
+		</div>
+	</div>
+	<!-- End Sidebar scroll-->
+</aside>

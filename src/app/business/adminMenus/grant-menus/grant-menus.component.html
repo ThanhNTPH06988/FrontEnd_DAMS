@@ -1,0 +1,156 @@
+<!-- loading -->
+<div class="loading" *ngIf="loading">Loading&#8230;</div>
+
+<div class="modal-header">
+    <h4 class="modal-title" [innerHTML]=title></h4>
+    <button type="button" class="close" aria-label="Close" (click)="close()">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+
+<div class="modal-body">
+    <form class="form-material form-horizontal" novalidate [formGroup]="menuForm">
+        <div class="form-group row">
+            <div class="col-md-4">
+                <label class="lbl-custome" for="example-text">{{'menus.code' | translate}}</label>
+                <input type="text" class="form-control" formControlName="code" [ngClass]="{ 'is-invalid': submitted && f.code.errors }" placeholder="{{'menus.placeholder.code' | translate}}" [readonly]="isReadOnly" trim>
+                <div *ngIf="submitted && f.code.errors">
+                    <span class="msg-invalid" *ngIf="f.code.errors.required">{{'common.msg.required' | translate}}</span>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <label class="lbl-custome" for="example-text">{{'menus.name' | translate}}</label>
+                <input type="text" class="form-control" formControlName="name" [ngClass]="{ 'is-invalid': submitted && f.name.errors }" placeholder="{{'menus.placeholder.name' | translate}}">
+                <div *ngIf="submitted && f.name.errors">
+                    <span class="msg-invalid" *ngIf="f.name.errors.required">{{'common.msg.required' | translate}}</span>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <label class="lbl-custome" for="example-text">{{'menus.icon' | translate}}</label>
+                <input type="text" class="form-control" formControlName="icon" [ngClass]="{ 'is-invalid': submitted && f.icon.errors }" placeholder="{{'menus.placeholder.icon' | translate}}">
+                <div *ngIf="submitted && f.icon.errors">
+                    <span class="msg-invalid" *ngIf="f.icon.errors.required">{{'common.msg.required' | translate}}</span>
+                </div>
+            </div>
+        </div>
+        <div class="form-group row">
+            <div class="col-md-4">
+                <label class="lbl-custome" for="example-text">{{'menus.path' | translate}}</label>
+                <input type="text" class="form-control" formControlName="path" [ngClass]="{ 'is-invalid': submitted && f.path.errors }" placeholder="{{'menus.placeholder.path' | translate}}" trim>
+                <div *ngIf="submitted && f.path.errors">
+                    <span class="msg-invalid" *ngIf="f.path.errors.required">{{'common.msg.required' | translate}}</span>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <label class="lbl-custome" for="example-text">{{'menus.orderView' | translate}}</label>
+                <input type="text" class="form-control" formControlName="orderView" [ngClass]="{ 'is-invalid': submitted && f.orderView.errors }" placeholder="{{'menus.placeholder.orderView' | translate}}">
+                <div *ngIf="submitted && f.orderView.errors">
+                    <span class="msg-invalid" *ngIf="f.orderView.errors.required">{{'common.msg.required' | translate}}</span>
+                </div>
+            </div>
+            <div class="col-md-4" *ngIf="isSubmenuParent">
+                <label class="lbl-custome" for="example-text">{{'menus.parent' | translate}}</label>
+                <input type="text" class="form-control" formControlName="menuParent" [readonly]="isSubmenuParent">
+            </div>
+            <div class="col-md-4" *ngIf="!isSubmenuParent">
+                <label class="lbl-custome" for="example-text">{{'menus.submenu' | translate}}</label>
+                <div class="radio-list">
+                    <div class="custom-control custom-radio custome-radio-group">
+                        <input type="radio" value="1" id="submenu-yes" class="custom-control-input" formControlName="submenu">
+                        <label class="custom-control-label" for="submenu-yes">{{'menus.confirm.yes' | translate}}</label>
+                    </div>
+                    <div class="custom-control custom-radio custome-radio-group">
+                        <input type="radio" value="0" id="submenu-no" class="custom-control-input" formControlName="submenu">
+                        <label class="custom-control-label" for="submenu-no">{{'menus.confirm.no' | translate}}</label>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+    <div class="form-group cl-mb">
+        <div class="fieldset-left">
+            <fieldset class="fieldset-custome">
+                <legend class="legend-custome">Danh sách quyền trong hệ thống</legend>
+                <div class="table-responsive">
+                    <table class="table table-bordered table-custome">
+                        <thead>
+                            <tr>
+                                <th class="text-center w1">{{'menus.no' | translate}}</th>
+                                <th class="text-center w1"><input type="checkbox" [(ngModel)]="chkAllNoGrant" (change)="checkGrant(0)">
+                                </th>
+                                <th class="text-center w10">Mã quyền</th>
+                                <th class="text-center w10">Tên quyền</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let noGrant of lstRoleNoGrant;index as i">
+                                <td class="text-center">{{(i+1)}}</td>
+                                <td class="text-center"><input type="checkbox" [(ngModel)]="noGrant.choice" (change)="checkGrantItem(0)"></td>
+                                <td>{{noGrant.code}}</td>
+                                <td>{{noGrant.code}}</td>
+                            </tr>
+                            <tr *ngIf="lstRoleNoGrant.length===0">
+                                <td class="text-center" colspan="4">{{'common.noresult' | translate}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </fieldset>
+        </div>
+        <div class="fieldset-center form-group cl-mb text-center">
+            <ul class="nav grant-button">
+                <li>
+                    <button type="submit" class="btn btn-success waves-effect waves-light" (click)="moveRight()">
+            <i class="ti-angle-right"></i>
+          </button>
+                </li>
+                <li>
+                    <button type="submit" class="btn btn-info waves-effect waves-light" (click)="moveLeft()">
+            <i class="ti-angle-left"></i>
+          </button>
+                </li>
+            </ul>
+        </div>
+        <div class="fieldset-right">
+            <fieldset class="fieldset-custome">
+                <legend class="legend-custome">Danh sách quyền trong hệ thống</legend>
+                <div class="table-responsive">
+                    <table class="table table-bordered table-custome">
+                        <thead>
+                            <tr>
+                                <th class="text-center w1">{{'menus.no' | translate}}</th>
+                                <th class="text-center w1"><input type="checkbox" [(ngModel)]="chkAllGrant" (change)="checkGrant(1)">
+                                </th>
+                                <th class="text-center w10">Mã quyền</th>
+                                <th class="text-center w10">Tên quyền</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let grant of lstRoleGrant;index as i">
+                                <td class="text-center">{{(i+1)}}</td>
+                                <td class="text-center"><input type="checkbox" [(ngModel)]="grant.choice" (change)="checkGrantItem(1)">
+                                </td>
+                                <td>{{grant.code}}</td>
+                                <td>{{grant.code}}</td>
+                            </tr>
+                            <tr *ngIf="lstRoleGrant.length===0">
+                                <td class="text-center" colspan="4">{{'common.noresult' | translate}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </fieldset>
+        </div>
+    </div>
+</div>
+
+<div class="modal-footer">
+    <button type="button" class="btn btn-info mr-2" (click)="saveOrUpdate()">
+    <i class="fa fa-save"></i>
+    Lưu
+  </button>
+    <button type="button" class="btn btn-danger" (click)="close()">
+    <i class="fa fa-times-circle"></i>
+    Đóng
+  </button>
+</div>

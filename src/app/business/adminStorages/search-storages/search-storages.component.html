@@ -1,0 +1,158 @@
+<!-- loading -->
+<div class="loading" *ngIf="loading">Loading&#8230;</div>
+
+<div class="row page-titles">
+  <div class="col-md-12 align-self-center">
+    <div class="d-flex">
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a routerLink="/home/dashboard">{{'nav.home' | translate}}</a></li>
+        <li class="breadcrumb-item active">{{'nav.storages' | translate}}</li>
+      </ol>
+    </div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-header card-custome">
+    <h4 class="m-b-0 card-title">{{'common.search.title' | translate}}</h4>
+  </div>
+  <div class="card-body">
+    <form class="form-horizontal m-t-30" novalidate [formGroup]="searchForm" (ngSubmit)="searchData(null)">
+      <div class="form-group row">
+        <label class="col-md-2 lbl-custome"atms>{{'storages.code' | translate}}</label>
+        <div class="col-md-4">
+          <input type="text" class="form-control" placeholder="{{'storages.placeholder.code' | translate}}" formControlName="code">
+        </div>
+
+        <label class="col-md-2 lbl-custome"atms>{{'storages.name' | translate}}</label>
+        <div class="col-md-4">
+          <input type="text" class="form-control" placeholder="{{'storages.placeholder.name' | translate}}" formControlName="name">
+        </div>
+      </div>
+
+      <div class="form-group row">
+        <label class="col-md-2 lbl-custome"atms>{{'storages.dateFrom' | translate}}</label>
+        <div class="col-md-4">
+          <div class="input-group">
+            <input type="text" class="form-control datepicker" placeholder="dd/mm/yyyy" bsDatepicker
+              #dpFrom="bsDatepicker" formControlName="dateFrom" [bsConfig]="{ customTodayClass: 'custom-today-class' }">
+            <div class="input-group-append">
+              <button class="waves-effect waves-light input-group-text input-group-custome" (click)="dpFrom.show()">
+                <i class="fa fa-calendar" aria-hidden="true"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+        <label class="col-md-2 lbl-custome"atms>{{'storages.dateTo' | translate}}</label>
+        <div class="col-md-4">
+          <div class="input-group">
+            <input type="text" class="form-control datepicker" placeholder="dd/mm/yyyy" bsDatepicker
+              #dpTo="bsDatepicker" formControlName="dateTo" [bsConfig]="{ customTodayClass: 'custom-today-class' }">
+            <div class="input-group-append">
+              <button class="waves-effect waves-light input-group-text input-group-custome" (click)="dpTo.show()">
+                <i class="fa fa-calendar" aria-hidden="true"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-group row">
+        <label class="col-md-2 lbl-custome"atms>{{'storages.unit' | translate}}</label>
+        <div class="col-md-4">
+          <select class="form-control" formControlName="branchId" >
+            <option value="">--Tất cả--</option>
+            <option *ngFor="let branch of lstBranch;" [ngValue]="branch.id">{{branch.name}}</option>
+          </select>
+        </div>
+        <label class="col-md-2 lbl-custome"atms>{{'storages.status' | translate}}</label>
+        <div class="col-md-4">
+          <select class="form-control" formControlName="status" >
+            <option value="">--Tất cả--</option>
+            <option *ngFor="let st of lstStatus;" [ngValue]="st.id">{{st.name}}</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-group text-center">
+        <button type="submit" class="btn btn-info waves-effect waves-light m-r-10" (click)="searchData(null)">
+          <i class="ti-search"></i>
+          {{'common.btn.search' | translate}}
+        </button>
+        <button type="submit" class="btn btn-success waves-effect waves-light" (click)="openDialog(null)">
+          <i class="ti-plus"></i>
+          {{'common.btn.addnew' | translate}}
+        </button>
+      </div>
+
+    </form>
+  </div>
+</div>
+
+<!-- Kết quả tìm kiếm -->
+<div class="card">
+  <div class="card-header card-custome">
+    <h4 class="m-b-0 card-title">{{'common.search.result' | translate}}</h4>
+  </div>
+  <div class="card-body">
+    <!-- pagination -->
+    <div class="form-group pagination-custome">
+      <span class="search-title">{{'common.search.result' | translate}} <span class="fw-bold">{{totalRecord}}</span> {{'common.result' | translate}}</span>
+      <pagination class="pagi" [totalItems]="totalRecord" [itemsPerPage]="maxPageView" previousText="&lsaquo;"
+        nextText="&rsaquo;" firstText="&laquo;" lastText="&raquo;" [boundaryLinks]="true" [maxSize]="size"
+        [(ngModel)]="page" (pageChanged)="searchData($event)">
+      </pagination>
+    </div>
+
+    <div class="table-responsive">
+      <table class="table table-bordered table-custome">
+        <thead>
+          <tr>
+            <th class="text-center w1">{{'storages.no' | translate}}</th>
+            <th class="text-center w5">{{'storages.code' | translate}}</th>
+            <th class="text-center w10">{{'storages.name' | translate}}</th>
+            <th class="text-center w10">{{'storages.branch' | translate}}</th>
+            <th class="text-center w20" >{{'storages.address' | translate}}</th>
+            <th class="text-center w10">{{'storages.dateCreated' | translate}}</th>
+            <th class="text-center w15">{{'storages.staffManager' | translate}}</th>
+            <th class="text-center w10">{{'storages.status' | translate}}</th>
+            <th class="text-center w10">{{'storages.function' | translate}}</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let item of lstRecord;index as i">
+            <td class="text-center">{{((page-1)*size)+(i+1)}}</td>
+            <td>{{item.code}}</td>
+            <td>{{item.name}}</td>
+            <td>{{item.branch != null ? item.branch.name :''}}</td>
+            <td>{{item.addrDetail}}, {{item.addr.fullName}}</td>
+            <td class="text-center">{{item.dateCreated | date: 'dd/MM/yyyy'}}</td>
+            <!-- <td></td> -->
+            <td>{{item.staff.name}}</td>
+            <td>{{item.status === 1 ? 'Hoạt động' : 'Không hoạt động'}}</td>
+            <td class="text-center">
+              <ul class="nav list-inline nav-center">
+                <li tooltip="Sửa thông tin kho tiền" (click)="openDialog(item)"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></li>
+                <li tooltip="Xóa thông tin kho tiền" (click)="confirmDeleted(item)"><i class="fa fa-trash-o" aria-hidden="true"></i></li>
+                <li *ngIf="item.status === 1" tooltip="Khóa kho tiền" (click)="lockOrUnlock(item)"><i class="fa fa-lock" aria-hidden="true"></i></li>
+                <li *ngIf="item.status === 0" tooltip="Mở khóa kho tiền" (click)="lockOrUnlock(item)"><i class="fa fa-unlock-alt" aria-hidden="true"></i></li>
+              </ul>
+            </td>
+          </tr>
+          <tr *ngIf="lstRecord.length===0">
+            <td class="text-center" colspan="9">{{'common.noresult' | translate}}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- pagination -->
+    <div class="form-group pagination-custome">
+      <pagination class="pagi" [totalItems]="totalRecord" [itemsPerPage]="maxPageView" previousText="&lsaquo;"
+        nextText="&rsaquo;" firstText="&laquo;" lastText="&raquo;" [boundaryLinks]="true" [maxSize]="size"
+        [(ngModel)]="page" (pageChanged)="searchData($event)">
+      </pagination>
+    </div>
+
+  </div>
+</div>

@@ -1,0 +1,122 @@
+<!-- loading -->
+<div class="loading" *ngIf="loading">Loading&#8230;</div>
+
+<div class="modal-header modal-primary">
+  <h4 class="modal-title" [innerHTML]=title></h4>
+  <button type="button" class="close" aria-label="Close" (click)="close()">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+
+<div class="modal-body">
+  <div class="form-group row">
+    <label class="col-md-2 lbl-custome">
+      Mã yêu cầu:
+    </label>
+    <div class="col-md-4">
+      <span class="input-view-data">{{item.code}}</span>
+    </div>
+    <label class="col-md-2 lbl-custome">
+      Chi nhánh:
+    </label>
+    <div class="col-md-4">
+      <span class="input-view-data">{{item.branchName}}</span>
+    </div>
+  </div>
+  <div class="form-group row">
+    <label class="col-md-2 lbl-custome">
+      Số lượng ATM:
+    </label>
+    <div class="col-md-4">
+      <span class="input-view-data">{{item.countAtmRequest}}</span>
+    </div>
+    <label class="col-md-2 lbl-custome">
+      Trạng thái:
+    </label>
+    <div class="col-md-4">
+      <span class="input-view-data" *ngIf='item.status === 0'>Chờ tiếp nhận</span>
+      <span class="input-view-data" *ngIf='item.status === 1'>Đã tiếp nhận</span>
+      <span class="input-view-data" *ngIf='item.status === 2'>Từ chối</span>
+    </div>
+  </div>
+  <div class="form-group row">
+    <label class="col-md-2 lbl-custome">
+      Ngày yêu cầu:
+    </label>
+    <div class="col-md-4">
+      <span class="input-view-data">{{item.dateRequestFrom | date: 'dd/MM/yyyy hh:mm:ss'}}</span>
+    </div>
+    <label class="col-md-2 lbl-custome">
+      Ngày hoàn thành:
+    </label>
+    <div class="col-md-4">
+      <span class="input-view-data">{{item.dateRequestFrom | date: 'dd/MM/yyyy hh:mm:ss'}}</span>
+    </div>
+  </div>
+
+  <fieldset class="fieldset-note">
+    <legend class="legend-custome">Danh sách ATM</legend>
+    <div class="table-responsive">
+      <table class="table table-bordered table-custome">
+        <thead>
+          <tr>
+            <th class="text-center w1">STT</th>
+            <th class="text-center w10">Mã hiệu máy</th>
+            <th class="text-center w20">Địa chỉ máy ATM</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let item of lstRecord;index as i">
+            <td class="text-center">{{i+1}}</td>
+            <td>{{item.code}}</td>
+            <td>{{item.addrDetail}}, {{item.addr.fullName}}</td>
+          </tr>
+          <tr *ngIf="lstRecord.length===0">
+            <td class="text-center" colspan="3">{{'common.noresult' | translate}}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </fieldset>
+
+  <fieldset class="fieldset-note">
+    <legend class="legend-custome">Lịch sử xử lý yêu cầu</legend>
+    <div class="table-responsive">
+      <table class="table table-bordered table-custome">
+        <thead>
+          <tr>
+            <th class="text-center w1">STT</th>
+            <th class="text-center w5">Người xử lý</th>
+            <th class="text-center w5">Chức vụ</th>
+            <th class="text-center w10">Thời gian</th>
+            <th class="text-center w5">Nội dung</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let item of lstRecordHis;index as i">
+            <td class="text-center">{{i+1}}</td>
+            <td>
+              <span *ngIf="item.staffId != null">{{item.staffE.name}}</span>
+              <span *ngIf="item.staffId == null">Hệ thống</span>
+            </td>
+            <td>
+              <span>{{item.staffId && item.staffE.staffPositionDomain.name}}</span>
+            </td>
+            <td class="text-center">{{item.dateHand | date: 'dd/MM/yyyy hh:mm:ss'}}</td>
+            <td>{{item.content}}</td>
+          </tr>
+          <tr *ngIf="lstRecord.length===0">
+            <td class="text-center" colspan="5">{{'common.noresult' | translate}}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </fieldset>
+</div>
+
+<div class="modal-footer">
+  <button type="button" class="btn btn-danger" (click)="close()">
+    <i class="fa fa-times-circle"></i>
+    {{'common.close' | translate}}
+  </button>
+</div>

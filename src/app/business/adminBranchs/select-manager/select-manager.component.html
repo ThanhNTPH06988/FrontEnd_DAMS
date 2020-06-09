@@ -1,0 +1,113 @@
+<!-- loading -->
+<div class="loading" *ngIf="loading">Loading&#8230;</div>
+
+<div class="modal-header modal-primary">
+  <h4 class="modal-title" [innerHTML]="title"></h4>
+  <button type="button" class="close" aria-label="Close" (click)="close()">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+
+<div class="modal-body">
+  <form class="form-horizontal m-t-30" novalidate [formGroup]="searchForm">
+    <div class="form-group row">
+      <label class="col-md-2 lbl-custome">Mã nhân viên</label>
+      <div class="col-md-4">
+        <input type="text" class="form-control" placeholder="Nhập vào mã nhân viên" formControlName="code" />
+      </div>
+      <label class="col-md-2 lbl-custome">Tên nhân viên</label>
+      <div class="col-md-4">
+        <input type="text" class="form-control" placeholder="Nhập vào tên nhân viên" formControlName="name" />
+      </div>
+    </div>
+    <div class="form-group row">
+      <label class="col-md-2 lbl-custome">Số CMND</label>
+      <div class="col-md-4">
+        <input type="text" class="form-control" placeholder="Nhập vào số CMND" formControlName="idcard" />
+      </div>
+    </div>
+    <div class="form-group text-center">
+      <button type="submit" class="btn btn-info waves-effect waves-light m-r-10" (click)="searchStaff(null)">
+        <i class="ti-search"></i>
+        {{ "common.btn.search" | translate }}
+      </button>
+    </div>
+  </form>
+  <div class="form-group pagination-custome">
+    <span class="search-title">{{ "common.search.result" | translate }}
+      <span class="fw-bold">{{ totalRecord }}</span>
+      {{ "common.result" | translate }}</span>
+    <pagination class="pagi" [totalItems]="totalRecord" [itemsPerPage]="maxPageView" previousText="&lsaquo;"
+      nextText="&rsaquo;" firstText="&laquo;" lastText="&raquo;" [boundaryLinks]="true" [maxSize]="size"
+      [(ngModel)]="page" (pageChanged)="searchStaff($event)">
+    </pagination>
+  </div>
+  <form class="form-horizontal m-t-30" novalidate [formGroup]="resultForm">
+    <div class="table-responsive">
+      <table class="table table-bordered table-custome scroll">
+        <thead>
+          <tr>
+            <th class="text-center w1">STT</th>
+            <th class="text-center w5">Chọn cán bộ</th>
+            <th class="text-center w8">Mã nhân viên</th>
+            <th class="text-center w10">Tên nhân viên</th>
+            <th class="text-center w10">Chức vụ</th>
+            <th class="text-center w7">Ngày sinh</th>
+            <th class="text-center w15">Địa chỉ</th>
+            <th class="text-center w10">Số điện thoại</th>
+            <th class="text-center w10">Số CMND</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let item of lstStaff; index as i">
+            <td class="text-center">{{((page-1)*size)+(i+1)}}</td>
+            <td class="text-center">
+              <input type="radio" formControlName="staffCode" value="{{ item.code }}" [ngClass]="{
+                  'is-invalid': submitted && f.staffCode.errors
+                }" />
+            </td>
+            <td>{{ item.code }}</td>
+            <td>{{ item.name }}</td>
+            <td>{{ item.staffPositionDomain.name }}</td>
+            <td class="text-center">
+              {{ item.dateOfBirth | date: "dd/MM/yyyy" }}
+            </td>
+            <td>
+              {{ item.addrDetail }},
+              {{ item.fullName != null ? item.fullName : item.addr.fullName }}
+            </td>
+            <td class="text-right">{{ item.phoneNumber }}</td>
+            <td>
+              {{ item.idcard}}
+            </td>
+          </tr>
+          <tr *ngIf="lstStaff.length === 0">
+            <td class="text-center" colspan="9">
+              Không có bản ghi.
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div *ngIf="submitted && f.staffCode.errors">
+      <span class="msg-invalid" *ngIf="f.staffCode.errors.required">Vui lòng chọn cán bộ</span>
+    </div>
+  </form>
+  <div class="form-group pagination-custome">
+    <pagination class="pagi" [totalItems]="totalRecord" [itemsPerPage]="maxPageView" previousText="&lsaquo;"
+      nextText="&rsaquo;" firstText="&laquo;" lastText="&raquo;" [boundaryLinks]="true" [maxSize]="size"
+      [(ngModel)]="page" (pageChanged)="searchStaff($event)">
+    </pagination>
+  </div>
+</div>
+
+<div class="modal-footer">
+  <button type="button" class="btn btn-info mr-2" (click)="save()">
+    <i class="fa fa-save"></i>
+    {{ "common.save" | translate }}
+  </button>
+  <button type="button" class="btn btn-danger" (click)="close()">
+    <i class="fa fa-times-circle"></i>
+    {{ "common.close" | translate }}
+  </button>
+</div>

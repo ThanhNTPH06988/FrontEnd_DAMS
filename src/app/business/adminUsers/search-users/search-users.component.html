@@ -1,0 +1,161 @@
+<!-- loading -->
+<div class="loading" *ngIf="loading">Loading&#8230;</div>
+
+<div class="row page-titles">
+  <div class="col-md-12 align-self-center">
+    <div class="d-flex">
+      <ol class="breadcrumb">
+          <li class="breadcrumb-item"><a routerLink="/home/dashboard">{{'nav.home' | translate}}</a></li>
+          <li class="breadcrumb-item active">{{'nav.users' | translate}}</li>
+      </ol>
+    </div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-header card-custome">
+    <h4 class="m-b-0 card-title">{{'common.search.title' | translate}}</h4>
+  </div>
+  <div class="card-body">
+    <form class="form-horizontal m-t-30" novalidate [formGroup]="searchForm">
+      <div class="form-group row">
+        <label class="col-md-2 lbl-custome">Tên đăng nhập</label>
+        <div class="col-md-4">
+          <input type="text" class="form-control" placeholder="Nhập vào tên đăng nhập" formControlName="userName">
+        </div>
+        <label class="col-md-2 lbl-custome">Tên nhân viên</label>
+        <div class="col-md-4">
+          <input type="text" class="form-control" placeholder="Nhập vào tên nhân viên" formControlName="staffName">
+        </div>
+      </div>
+      <div class="form-group row">
+        <label class="col-md-2 lbl-custome">Chức vụ</label>
+        <div class="col-md-4">
+          <select class="form-control" formControlName="staffPositionId">
+            <option value="">Tất cả</option>
+            <option *ngFor="let staffPos of lstStaffPosition;" [ngValue]="staffPos.id">
+              {{staffPos.name}}
+            </option>
+          </select>
+        </div>
+        <label class="col-md-2 lbl-custome">Trạng thái</label>
+        <div class="col-md-4">
+          <select class="form-control" formControlName="status">
+            <option value="">Tất cả</option>
+            <!-- <option value="1">Hoạt động</option>
+            <option value="0">Không hoạt động</option> -->
+            <option *ngFor="let st of lstStatus;" [ngValue]="st.id">
+              {{st.name}}
+            </option>
+          </select>
+        </div>
+      </div>
+      <div class="form-group row">
+        <label class="col-md-2 lbl-custome">Ngày tạo từ</label>
+        <div class="col-md-4">
+          <div class="input-group">
+            <input type="text" class="form-control datepicker" placeholder="dd/mm/yyyy" bsDatepicker #dpFrom="bsDatepicker" formControlName="dateFrom">
+            <div class="input-group-append">
+              <button class="waves-effect waves-light input-group-text input-group-custome" (click)="dpFrom.show()">
+                <i class="fa fa-calendar" aria-hidden="true"></i>
+              </button>
+            </div>
+          </div>         
+        </div>
+        <label class="col-md-2 lbl-custome">Ngày tạo đến</label>
+        <div class="col-md-4">
+          <div class="input-group">
+            <input type="text" class="form-control datepicker" placeholder="dd/mm/yyyy" bsDatepicker #dpTo="bsDatepicker" formControlName="dateTo">
+            <div class="input-group-append">
+              <button class="waves-effect waves-light input-group-text input-group-custome" (click)="dpTo.show()">
+                <i class="fa fa-calendar" aria-hidden="true"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-group text-center">
+        <button type="submit" class="btn btn-info waves-effect waves-light m-r-10" (click)="search(null)">
+          <i class="ti-search"></i>
+          {{'common.btn.search' | translate}}
+        </button>
+        <button type="submit" class="btn btn-success waves-effect waves-light" (click)="openDialog(null)">
+          <i class="ti-plus"></i>
+          {{'common.btn.addnew' | translate}}
+        </button>
+      </div>
+
+    </form>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-header card-custome">
+    <h4 class="m-b-0 card-title">{{'common.search.result' | translate}}</h4>
+  </div>
+  <div class="card-body">
+    <!-- pagination -->
+    <div class="form-group pagination-custome">
+      <span class="search-title">Kết quả tìm kiếm <span class="fw-bold">{{totalRecord}}</span> bản ghi</span>
+      <pagination class="pagi" [totalItems]="totalRecord" [itemsPerPage]="maxPageView" previousText="&lsaquo;"
+        nextText="&rsaquo;" firstText="&laquo;" lastText="&raquo;" [boundaryLinks]="true" [maxSize]="size"
+        [(ngModel)]="page" (pageChanged)="search($event)">
+      </pagination>
+    </div>
+
+    <div class="table-responsive">
+      <table class="table table-bordered table-custome">
+        <thead>
+          <tr>
+            <th class="text-center w1">STT</th>
+            <th class="text-center w10">Tên đăng nhập</th>
+            <th class="text-center w15">Tên nhân viên</th>
+            <th class="text-center w10">Chi nhánh</th>
+            <th class="text-center w10">Ngày tạo</th>
+            <th class="text-center w15">Chức vụ</th>
+            <th class="text-center w10">Người tạo</th>
+            <th class="text-center w5">Số lần đăng nhập</th>
+            <th class="text-center w5">Lần đăng nhập cuối cùng</th>
+            <th class="text-center w10">Trạng thái</th>
+            <th class="text-center w10">Chức năng</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let item of lstRecord;index as i">
+            <td class="text-center">{{((page-1)*size)+(i+1)}}</td>
+            <td>{{item.userName}}</td>
+            <td>{{item.staffDomain != null ? item.staffDomain.name : ''}}</td>
+            <td>{{item.staffDomain != null ? item.staffDomain.branchDomain.name : ''}}</td>
+            <td class="text-center">{{item.dateCreated | date: 'dd/MM/yyyy'}}</td>
+            <td>{{item.staffDomain != null && item.staffDomain.staffPositionDomain != null ? item.staffDomain.staffPositionDomain.name : ''}}</td>
+            <td>{{item.userNameCreate != null ? item.userNameCreate : 'Admin hệ thống'}}</td>
+            <td class="text-right">{{item.numberLogin}}</td>
+            <td class="text-center">{{item.lastLogin | date: 'dd/MM/yyyy HH:mm:ss'}}</td>
+            <td>{{item.status === 1 ? 'Hoạt động' : 'Không hoạt động'}}</td>
+            <td class="text-center">
+              <ul class="nav list-inline nav-center">
+                <li tooltip="Phân quyền cho tài khoản" (click)="openDialog(item)"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></li>
+                <li *ngIf="item.status === 1" tooltip="Khóa tài khoản" (click)="lockOrUnlock(item)"><i class="fa fa-lock" aria-hidden="true"></i></li>
+                <li *ngIf="item.status === 0" tooltip="Mở khóa tài khoản" (click)="lockOrUnlock(item)"><i class="fa fa-unlock-alt" aria-hidden="true"></i></li>
+                <li tooltip="Xóa tài khoản" (click)="confirmDeleted(item)"><i class="fa fa-trash-o" aria-hidden="true"></i></li>
+              </ul>
+            </td>
+          </tr>
+          <tr *ngIf="lstRecord.length===0">
+            <td class="text-center" colspan="10">{{'common.noresult' | translate}}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- pagination -->
+    <div class="form-group pagination-custome">
+      <pagination class="pagi" [totalItems]="totalRecord" [itemsPerPage]="maxPageView" previousText="&lsaquo;"
+        nextText="&rsaquo;" firstText="&laquo;" lastText="&raquo;" [boundaryLinks]="true" [maxSize]="size"
+        [(ngModel)]="page" (pageChanged)="search($event)">
+      </pagination>
+    </div>
+
+  </div>
+</div>

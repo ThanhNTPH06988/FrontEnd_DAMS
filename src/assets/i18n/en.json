@@ -1,0 +1,55 @@
+{
+    "app_title":"Bank funds",
+    "common":{
+        "search":{
+            "title":"Search information",
+            "result":"Kết quả tìm kiếm"
+        },
+        "btn":{
+            "search":"Tìm kiếm",
+            "addnew":"Thêm mới"
+        },
+        "noresult":"Không có bản ghi"
+    },
+    "nav":{
+        "home":"Trang chủ",
+        "qtht":"Quản trị hệ thống"
+    },
+    "admin":{
+        "menus":{
+            "no":"STT",
+            "code":"Mã menu",
+            "name":"Tên menu",
+            "dateCreated":"Ngày tạo",
+            "path":"Đường dẫn",
+            "level":"Level",
+            "orderView":"Thứ tự hiển thị",
+            "status":"Trạng thái",
+            "action":"Chức năng",
+            "icon":"Icon hiển thị",
+            "parent":"Menu cha",
+            "placeholder":{
+                "code":"Menu01",
+                "name":"Tên menu 01",
+                "icon":"Icon",
+                "path":"/menu01",
+                "level":"---- Chọn level menu ----",
+                "parent":"---- Chọn menu cha ----",
+                "orderView":"---- Thứ tự 1 ----"
+            }
+        }
+    },
+    "employee": {
+      "no": "STT",
+      "code": "Mã nhân viên",
+      "name": "Tên nhân viên",
+      "position": "Vị trí",
+      "birthDay": {
+        "to": "Ngày sinh từ",
+        "from": "Ngày sinh đến"
+      },
+      "date_of_birth": "Ngày sinh",
+      "gender": "Giới tính",
+      "function": "Chức năng"
+    }
+}

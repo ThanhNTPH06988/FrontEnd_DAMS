@@ -1,0 +1,28 @@
+.fieldset-custome{
+  border: #ccc 1px solid !important;
+  border-radius: 5px !important;
+  padding: 10px !important;
+  min-height: 350px !important;
+  max-height: 350px !important;
+  width: auto !important;
+
+  .table-responsive{
+    max-height: 250px !important;
+    overflow: auto !important;
+  }
+
+}
+.scroll{
+  // display: block;
+  overflow: auto !important;
+}
+
+.legend-custome{
+  width: auto !important;
+  padding-left: 5px;
+  padding-right: 5px;
+  font-size: 15px !important;
+}
+// thead {
+//   display: block;
+// }

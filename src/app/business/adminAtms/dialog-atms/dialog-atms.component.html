@@ -1,0 +1,130 @@
+<!-- loading -->
+<div class="loading" *ngIf="loading">Loading&#8230;</div>
+
+<div class="modal-header modal-primary">
+  <h4 class="modal-title" [innerHTML]=title></h4>
+  <button type="button" class="close" aria-label="Close" (click)="close()">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+
+<div class="modal-body">
+  <form class="form-horizontal" novalidate [formGroup]="atmsForm">
+    <div class="form-group row">
+      <label class="col-md-2 lbl-custome">{{'atms.code' | translate}}
+        <sup class="msg-invalid">(*)</sup>
+      </label>
+      <div class="col-md-4">
+        <input type="text" class="form-control" placeholder="{{'atms.placeholder.code' | translate}}"
+          [ngClass]="{ 'is-invalid': submitted && f.code.errors }" formControlName="code" trim >
+        <div *ngIf="submitted && f.code.errors">
+          <span class="msg-invalid" *ngIf="f.code.errors.required">{{'common.msg.required' | translate}}</span>
+          <span class="msg-invalid" *ngIf="f.code.errors.maxlength">Độ dài tối đa 50 ký tự</span>
+        </div>
+      </div>
+      <label class="col-md-2 lbl-custome">{{'atms.branch' | translate}}
+        <sup class="msg-invalid">(*)</sup>
+      </label>
+      <div class="col-md-4">
+        <select class="form-control selectpicker"  [ngClass]="{ 'is-invalid': submitted && f.branchId.errors }" formControlName="branchId">
+          <option value="">--Chọn chi nhánh--</option>
+          <option *ngFor="let br of lstBranch;" [ngValue]="br.id">{{br.name}}</option>
+        </select>
+        <div *ngIf="submitted && f.branchId.errors">
+          <span class="msg-invalid" *ngIf="f.branchId.errors.required">{{'common.msg.required' | translate}}</span>
+        </div>
+      </div>
+    </div>
+    <div class="form-group row">
+      <label class="col-md-2 lbl-custome">{{'atms.latitude' | translate}}
+        <sup class="msg-invalid">(*)</sup>
+      </label>
+      <div class="col-md-4">
+        <input type="text" class="form-control" placeholder="{{'atms.placeholder.latitude' | translate}}"
+          [ngClass]="{ 'is-invalid': submitted && f.latitude.errors }" formControlName="latitude" trim="blur">
+        <div *ngIf="submitted && f.latitude.errors">
+          <span class="msg-invalid" *ngIf="f.latitude.errors.required">{{'common.msg.required' | translate}}</span>
+          <span class="msg-invalid" *ngIf="f.latitude.errors.maxlength">Độ dài tối đa 100 ký tự</span>
+        </div>
+      </div>
+      <label class="col-md-2 lbl-custome">{{'atms.longitude' | translate}}
+        <sup class="msg-invalid">(*)</sup>
+      </label>
+      <div class="col-md-4">
+        <input type="text" class="form-control" placeholder="{{'atms.placeholder.longitude' | translate}}"
+          [ngClass]="{ 'is-invalid': submitted && f.longitude.errors }" formControlName="longitude" trim="blur">
+        <div *ngIf="submitted && f.longitude.errors">
+          <span class="msg-invalid" *ngIf="f.longitude.errors.required">{{'common.msg.required' | translate}}</span>
+          <span class="msg-invalid" *ngIf="f.longitude.errors.maxlength">Độ dài tối đa 100 ký tự</span>
+        </div>
+      </div>
+    </div>
+    <div class="form-group row">
+      <label class="col-md-2 lbl-custome">{{'atms.province' | translate}}
+        <sup class="msg-invalid">(*)</sup>
+      </label>
+      <div class="col-md-4">
+        <select class="form-control" (change)="getDistrict()" tooltip="---Chọn tỉnh/ TP---"
+          [ngClass]="{ 'is-invalid': submitted && f.provinceCode.errors }" formControlName="provinceCode">
+          <option value="">---Chọn tỉnh/ TP---</option>
+          <option *ngFor="let pro of lstProvince; let i = index;" [ngValue]="pro.provinceCode">{{pro.provinceName}}
+          </option>
+        </select>
+        <div *ngIf="submitted && f.provinceCode.errors">
+          <span class="msg-invalid" *ngIf="f.provinceCode.errors.required">Thông tin bắt buộc nhập</span>
+        </div>
+      </div>
+      <label class="col-md-2 lbl-custome">{{'atms.district' | translate}}
+        <sup class="msg-invalid">(*)</sup>
+      </label>
+      <div class="col-md-4">
+        <select class="form-control" tooltip="---Chọn quận/ huyện/ TX---" (change)="getWard()"
+          [ngClass]="{ 'is-invalid': submitted && f.districtCode.errors }" formControlName="districtCode">
+          <option value="">---Chọn quận/ huyện/ TX---</option>
+          <option *ngFor="let dist of lstDistrict; let i = index;" [ngValue]="dist.districtCode">
+            {{dist.districtName}}</option>
+        </select>
+        <div *ngIf="submitted && f.districtCode.errors">
+          <span class="msg-invalid" *ngIf="f.districtCode.errors.required">Thông tin bắt buộc nhập</span>
+        </div>
+      </div>
+    </div>
+    <div class="form-group row">
+      <label class="col-md-2 lbl-custome">{{'atms.ward' | translate}}
+        <sup class="msg-invalid">(*)</sup>
+       </label>
+      <div class="col-md-4">
+        <select class="form-control" tooltip="---Chọn xã/ phường/ TT---"
+          [ngClass]="{ 'is-invalid': submitted && f.wardCode.errors }" formControlName="wardCode">
+          <option value="">---Chọn xã/ phường/ TT---</option>
+          <option *ngFor="let ward of lstWard; let i = index;" [ngValue]="ward.id">{{ward.wardName}}</option>
+        </select>
+        <div *ngIf="submitted && f.wardCode.errors">
+          <span class="msg-invalid" *ngIf="f.wardCode.errors.required">Thông tin bắt buộc nhập</span>
+        </div>
+      </div>
+      <label class="col-md-2 lbl-custome">
+        {{'atms.addr' | translate}} <sup class="msg-invalid">(*)</sup>
+      </label>
+      <div class="col-md-4">
+        <input type="text" class="form-control" placeholder="{{'atms.placeholder.addr' | translate}}"
+          [ngClass]="{ 'is-invalid': submitted && f.addr.errors }" formControlName="addr" trim="blur">
+        <div *ngIf="submitted && f.addr.errors">
+          <span class="msg-invalid" *ngIf="f.addr.errors.required">{{'common.msg.required' | translate}}</span>
+          <span class="msg-invalid" *ngIf="f.addr.errors.maxlength">Độ dài tối đa 100 ký tự</span>
+        </div>
+      </div>
+    </div>
+  </form>
+</div>
+
+<div class="modal-footer">
+  <button type="button" class="btn btn-info mr-2" (click)="saveOrUpdate(null)">
+    <i class="fa fa-save"></i>
+    Lưu
+  </button>
+  <button type="button" class="btn btn-danger" (click)="close()">
+    <i class="fa fa-times-circle"></i>
+    Đóng
+  </button>
+</div>

@@ -1,0 +1,32 @@
+<!-- loading -->
+<div class="loading" *ngIf="loading">Loading&#8230;</div>
+
+
+<div class="modal-header modal-primary">
+  <h4 class="modal-title" [innerHTML]=title></h4>
+  <button type="button" class="close" aria-label="Close" (click)="close()">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+<div class="modal-body">
+  <div class="form-group row">
+    <label class="col-md-2 lbl-custome">Mã nhân viên</label>
+    <div class="col-md-4">
+      <span class="input-view-data">{{item.staffDomain != null ? item.staffDomain.code : ''}}</span>
+    </div>
+    <label class="col-md-2 lbl-custome">Tên nhân viên</label>
+    <div class="col-md-4">
+      <span class="input-view-data">{{item.staffDomain != null ? item.staffDomain.name : ''}}</span>
+    </div>
+  </div>
+</div>
+<div class="modal-footer">
+  <!-- <button type="button" class="btn btn-info mr-2" (click)="saveOrUpdate()">
+    <i class="fa fa-save"></i>
+    Lưu
+  </button> -->
+  <button type="button" class="btn btn-danger" (click)="close()">
+    <i class="fa fa-times-circle"></i>
+    Đóng
+  </button>
+</div>

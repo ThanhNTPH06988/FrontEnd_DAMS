@@ -1,0 +1,276 @@
+<!-- loading -->
+<div class="loading" *ngIf="loading">Loading&#8230;</div>
+
+<div class="modal-header modal-primary">
+  <h4 class="modal-title" [innerHTML]="title"></h4>
+  <button type="button" class="close" aria-label="Close" (click)="close()">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+
+<div class="modal-body">
+  <form class="form-horizontal" novalidate [formGroup]="branchForm">
+    <div class="form-group row">
+      <label class="col-md-2 lbl-custome" for="example-text"
+        >{{ "branch.code" | translate
+        }}<sup class="lable-required">(*)</sup></label
+      >
+      <div class="col-md-4">
+        <input
+          type="text"
+          class="form-control"
+          placeholder="{{ 'branch.placeholder.code' | translate }}"
+          [ngClass]="{ 'is-invalid': submitted && f.code.errors }"
+          formControlName="code"
+          (ngModelChange)="existCode()"
+          trim
+        />
+        <div *ngIf="submitted && f.code.errors">
+          <span class="msg-invalid" *ngIf="f.code.errors.required">{{
+            "common.msg.required" | translate
+          }}</span>
+          <span class="msg-invalid" *ngIf="f.code.errors.maxlength"
+            >Độ dài tối đa 50 ký tự</span
+          >
+        </div>
+        <span class="msg-invalid" *ngIf="submitted && isExitCode"
+          >Mã chi nhánh đã tồn tại</span
+        >
+      </div>
+      <label class="col-md-2 lbl-custome" for="example-text"
+        >{{ "branch.name" | translate
+        }}<sup class="lable-required">(*)</sup></label
+      >
+      <div class="col-md-4">
+        <input
+          type="text"
+          class="form-control"
+          placeholder="{{ 'branch.placeholder.name' | translate }}"
+          [ngClass]="{ 'is-invalid': submitted && f.name.errors }"
+          formControlName="name"
+          trim="blur"
+        />
+        <div *ngIf="submitted && f.name.errors">
+          <span class="msg-invalid" *ngIf="f.name.errors.required">{{
+            "common.msg.required" | translate
+          }}</span>
+          <span class="msg-invalid" *ngIf="f.name.errors.maxlength"
+            >Độ dài tối đa 100 ký tự</span
+          >
+        </div>
+      </div>
+    </div>
+    <div class="form-group row">
+      <label class="col-md-2 lbl-custome" for="example-text"
+        >{{ "branch.province" | translate
+        }}<sup class="lable-required">(*)</sup></label
+      >
+      <div class="col-md-4">
+        <select
+          class="form-control selectpicker"
+          (change)="getDistrict()"
+          [ngClass]="{ 'is-invalid': submitted && f.provinceCode.errors }"
+          formControlName="provinceCode"
+          tooltip="---Chọn tỉnh, thành phố---"
+        >
+          <option value="">{{
+            "branch.placeholder.selectProvince" | translate
+          }}</option>
+          <option
+            *ngFor="let pro of lstProvince; let i = index"
+            [ngValue]="pro.provinceCode"
+            >{{ pro.provinceName }}</option
+          >
+        </select>
+        <div *ngIf="submitted && f.provinceCode.errors">
+          <span class="msg-invalid" *ngIf="f.provinceCode.errors.required">{{
+            "common.msg.required" | translate
+          }}</span>
+        </div>
+      </div>
+      <label class="col-md-2 lbl-custome" for="example-text"
+        >{{ "branch.district" | translate
+        }}<sup class="lable-required">(*)</sup></label
+      >
+      <div class="col-md-4">
+        <select
+          class="form-control selectpicker"
+          (change)="getWard()"
+          [ngClass]="{ 'is-invalid': submitted && f.districtCode.errors }"
+          formControlName="districtCode"
+          tooltip="---Chọn quận, huyện, thị xã---"
+        >
+          <option value="">{{
+            "branch.placeholder.selectDistrict" | translate
+          }}</option>
+          <option
+            *ngFor="let dist of lstDistrict; let i = index"
+            [ngValue]="dist.districtCode"
+            >{{ dist.districtName }}</option
+          >
+        </select>
+        <div *ngIf="submitted && f.districtCode.errors">
+          <span class="msg-invalid" *ngIf="f.districtCode.errors.required">{{
+            "common.msg.required" | translate
+          }}</span>
+        </div>
+      </div>
+    </div>
+    <div class="form-group row">
+      <label class="col-md-2 lbl-custome"
+        >{{ "branch.ward" | translate
+        }}<sup class="lable-required">(*)</sup></label
+      >
+      <div class="col-md-4">
+        <select
+          class="form-control selectpicker"
+          [ngClass]="{ 'is-invalid': submitted && f.addrId.errors }"
+          formControlName="addrId"
+          tooltip="---Chọn xã, phường, thị trấn---"
+        >
+          <option value="">{{
+            "branch.placeholder.selectWard" | translate
+          }}</option>
+          <option
+            *ngFor="let ward of lstWard; let i = index"
+            [ngValue]="ward.id"
+            >{{ ward.wardName }}</option
+          >
+        </select>
+        <div *ngIf="submitted && f.addrId.errors">
+          <span class="msg-invalid" *ngIf="f.addrId.errors.required">{{
+            "common.msg.required" | translate
+          }}</span>
+        </div>
+      </div>
+      <label class="col-md-2 lbl-custome"
+        >{{ "branch.addrDetail" | translate
+        }}<sup class="lable-required">(*)</sup></label
+      >
+      <div class="col-md-4">
+        <input
+          type="text"
+          class="form-control"
+          placeholder="{{ 'branch.placeholder.addrDetail' | translate }}"
+          [ngClass]="{ 'is-invalid': submitted && f.addrDetail.errors }"
+          formControlName="addrDetail"
+          trim="blur"
+        />
+        <div *ngIf="submitted && f.addrDetail.errors">
+          <span class="msg-invalid" *ngIf="f.addrDetail.errors.required">{{
+            "common.msg.required" | translate
+          }}</span>
+          <span class="msg-invalid" *ngIf="f.addrDetail.errors.maxlength"
+            >Độ dài tối đa 100 ký tự</span
+          >
+        </div>
+      </div>
+    </div>
+
+    <!-- danh sách nhân viên -->
+    <!-- <div class="form-group row">
+      <div class="col-md-12">
+        <fieldset class="fieldset-custome">
+          <legend class="legend-custome">
+            {{ "branch.staff" | translate
+            }}<sup class="lable-required">(*)</sup>&nbsp;
+            <button
+              type="button"
+              tooltip="Thêm thông tin nhân viên"
+              class="btn btn-success waves-effect waves-light"
+              (click)="addStaff()"
+            >
+              <i class="ti-plus"></i>
+            </button>
+          </legend>
+          <br />
+          <div class="table-responsive">
+            <table class="table table-bordered table-custome scroll">
+              <thead>
+                <tr>
+                  <th class="text-center w1">STT</th>
+                  <th class="text-center w7">Chọn cán bộ</th>
+                  <th class="text-center w10">Mã nhân viên</th>
+                  <th class="text-center w10">Tên nhân viên</th>
+                  <th class="text-center w10">Ngày sinh</th>
+                  <th class="text-center w15">Địa chỉ</th>
+                  <th class="text-center w10">Số điện thoại</th>
+                  <th class="text-center w10">Trạng thái</th>
+                  <th class="text-center w10">Chức năng</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let item of lstStaff; index as i">
+                  <td class="text-center">{{ i + 1 }}</td>
+                  <td class="text-center">
+                    <input
+                      type="radio"
+                      formControlName="staffCode"
+                      value="{{item.code}}"
+                      [ngClass]="{
+                        'is-invalid': submitted && f.staffCode.errors
+                      }"
+                    />
+                  </td>
+                  <td>{{ item.code }}</td>
+                  <td>{{ item.name }}</td>
+                  <td class="text-center">
+                    {{ item.dateOfBirth | date: "dd/MM/yyyy" }}
+                  </td>
+                  <td>
+                    {{ item.addrDetail }},
+                    {{
+                      item.fullName != null ? item.fullName : item.addr.fullName
+                    }}
+                  </td>
+                  <td class="text-right">{{ item.phoneNumber }}</td>
+                  <td>
+                    {{ item.status == 1 ? "Hoạt động" : "Không hoạt động" }}
+                  </td>
+                  <td class="text-center">
+                    <ul class="nav list-inline nav-center">
+                      <li
+                        tooltip="Sửa thông tin nhân viên"
+                        (click)="addStaff(item, i)"
+                      >
+                        <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+                      </li>
+                      <li
+                        tooltip="Xóa thông tin nhân viên chi nhánh"
+                        (click)="deletedTemp(i)"
+                      >
+                        <i class="fa fa-trash-o" aria-hidden="true"></i>
+                      </li>
+                    </ul>
+                  </td>
+                </tr>
+                <tr *ngIf="lstStaff.length === 0">
+                  <td class="text-center" colspan="9">
+                    {{ "common.noresult" | translate }}
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </fieldset>
+        <div *ngIf="submitted && f.staffCode.errors">
+          <span class="msg-invalid" *ngIf="f.staffCode.errors.required">{{
+            "common.msg.required" | translate
+          }}</span>
+        </div>
+      </div>
+    </div> -->
+    <!-- end nhân viên chi nhánh -->
+  </form>
+</div>
+
+<div class="modal-footer">
+  <button type="button" class="btn btn-info mr-2" (click)="save()">
+    <i class="fa fa-save"></i>
+    {{ "common.save" | translate }}
+  </button>
+  <button type="button" class="btn btn-danger" (click)="close()">
+    <i class="fa fa-times-circle"></i>
+    {{ "common.close" | translate }}
+  </button>
+</div>

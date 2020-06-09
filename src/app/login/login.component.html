@@ -1,0 +1,76 @@
+<div class="loading" *ngIf="loading">Loading&#8230;</div>
+
+<section id="wrapper">
+	<div class="login-register" style="background-image:url(../../assets/image/bg_login.jpg);">
+		<div class="login-box card">
+			<div class="card-body">
+				<form class="form-horizontal form-material" id="loginform" novalidate [formGroup]="userForm">
+					<h3 class="text-center m-b-20">
+						Đăng nhập
+					</h3>
+					<div class="form-group ">
+						<div class="col-xs-12">
+							<input class="form-control" type="text" formControlName="username" placeholder="Tên đăng nhập" [ngClass]="{ 'is-invalid': submitted && f.username.errors }"> 
+						</div>
+						<div *ngIf="submitted && f.username.errors">
+							<span class="msg-invalid" *ngIf="f.username.errors.required">Thông tin bắt buộc nhập</span>
+						</div>
+					</div>
+					<div class="form-group">
+						<div class="col-xs-12">
+							<input class="form-control" type="password" formControlName="password" placeholder="Mật khẩu" [ngClass]="{ 'is-invalid': submitted && f.password.errors }"> 
+						</div>
+						<div *ngIf="submitted && f.password.errors">
+							<span class="msg-invalid" *ngIf="f.password.errors.required">Thông tin bắt buộc nhập</span>
+						</div>
+					</div>
+					<div class="form-group row">
+						<div class="col-md-12">
+							<div class="d-flex no-block align-items-center">
+								<div class="custom-control custom-checkbox">
+									<input type="checkbox" class="custom-control-input" id="customCheck1">
+									<label class="custom-control-label" for="customCheck1">Lưu mật khẩu</label>
+								</div>
+								<div class="ml-auto">
+									<a id="to-recover" class="text-muted" (click)="forgotPass()"><i class="fas fa-lock m-r-5"></i> Quên mật khẩu?</a> 
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="form-group text-center" style="margin-bottom: 0px !important;">
+						<div class="col-xs-12 p-b-20">
+							<button class="btn btn-block btn-lg btn-info btn-rounded" type="submit" (click)="login()">Đăng nhập</button>
+						</div>
+					</div>
+				</form>
+				<form class="form-horizontal" id="recoverform" novalidate [formGroup]="forgotPassForm">
+					<div class="form-group ">
+						<div class="col-xs-12">
+							<h3>
+								<i class="fa fa-arrow-circle-o-left hoverPointer" aria-hidden="true" (click)="backLogin()"></i>
+								Quên mật khẩu</h3>
+							<p class="text-muted">Nhập email của bạn và mật khẩu mới sẽ được gửi về email của bạn! </p>
+						</div>
+					</div>
+					<div class="form-group ">
+						<div class="col-xs-12">
+							<input class="form-control" type="text" formControlName="email" placeholder="Email" [ngClass]="{ 'is-invalid': subForgot && fg.email.errors }" trim="blur"> 
+							<div *ngIf="subForgot && fg.email.errors">
+								<span class="msg-invalid" *ngIf="fg.email.errors.required">Thông tin bắt buộc nhập</span>
+								<span class="msg-invalid" *ngIf="fg.email.errors.email">Không đúng định dạng email</span>
+							</div>
+						</div>
+					</div>
+					<div class="form-group row text-center m-t-20">
+						<div class="col-md-6 col-xs-12">
+							<button class="btn btn-block btn-lg btn-info" type="button" (click)="sendForgotPass()">Tiếp</button>							
+						</div>
+						<div class="col-md-6 col-xs-12">							
+							<button class="btn btn-block btn-lg btn-success" type="button" (click)="backLogin()">Đăng nhập</button>
+						</div>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+</section>

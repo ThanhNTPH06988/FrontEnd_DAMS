@@ -1,0 +1,280 @@
+{
+    "app_title": "Bank funds",
+    "common": {
+        "search": {
+            "title": "Thông tin tìm kiếm",
+            "result": "Kết quả tìm kiếm"
+        },
+        "btn": {
+            "search": "Tìm kiếm",
+            "addnew": "Thêm mới",
+            "save": "Lưu",
+            "cancel": "Đóng",
+            "confirm": "Xác nhận",
+            "refuse": "Từ chối"
+        },
+        "noSearch":"Không tìm thấy kết quả",
+        "noresult": "Không có bản ghi",
+        "record": "bản ghi",
+        "result": "bản ghi",
+        "specialCharactor": "Không nhập ký tự đặc biệt",
+        "maxlength": "Không nhập 4 ký tự",
+        "msg": {
+            "required": "Thông tin bắt buộc nhập"
+        },
+        "save": "Lưu",
+        "close": "Đóng",
+        "confirm": {
+            "yes": "Đồng ý",
+            "no": "Đóng"
+        },
+        "toast": {
+            "notification": "Thông báo",
+            "sysBusy": "Hệ thống đang bận. Xin vui lòng thử lại sau!"
+        },
+        "accept":"Xác nhận"
+    },
+    "nav":{
+        "home":"Trang chủ",
+        "qtht":"Quản trị hệ thống",
+        "users":"Quản lý tài khoản",
+        "menus":"Quản lý menu",
+        "params":"Quản lý tham số cấu hình",
+        "branchs":"Quản lý danh sách chi nhánh",
+        "staffs":"Quản lý danh sách nhân viên",
+        "storages":"Quản lý danh sách kho tiền",
+        "atms":"Quản lí thông tin ATM",
+        "cars":"Quản lý thông tin xe vận chuyển",
+        "casstte":"Quản lý thông tin Casstte",
+        "ttvhdp":"Trung tâm vận hành, điều phối",
+        "nvkkn":"Nhân viên kho, kiểm ngân",
+        "nvtqatm":"Nhân viên tiếp quỹ ATM (thủ quỹ ATM, lái xe)",
+        "request":"Danh sách yêu cầu tiếp quỹ ATM",
+        "qlyctq": "Danh sách lộ trình yêu cầu tiếp quỹ"
+    },
+    "menus": {
+        "no": "STT",
+        "code": "Mã menu",
+        "name": "Tên menu",
+        "dateCreated": "Ngày tạo",
+        "path": "Đường dẫn",
+        "level": "Level",
+        "orderView": "Thứ tự hiển thị",
+        "status": "Trạng thái",
+        "action": "Chức năng",
+        "icon": "Icon hiển thị",
+        "parent": "Menu cha",
+        "placeholder": {
+            "code": "Menu01",
+            "name": "Tên menu 01",
+            "icon": "Icon",
+            "path": "menu01",
+            "level": "----Chọn level menu----",
+            "parent": "----Chọn menu cha----",
+            "orderView": "----Thứ tự 1----"
+		}
+    },
+	"admin": {
+		"menus": {
+		  "no": "STT",
+		  "code": "Mã menu",
+		  "name": "Tên menu",
+		  "dateCreated": "Ngày tạo",
+		  "path": "Đường dẫn",
+		  "level": "Level",
+		  "orderView": "Thứ tự hiển thị",
+		  "status": "Trạng thái",
+		  "action": "Chức năng",
+		  "icon": "Icon hiển thị",
+		  "parent": "Menu cha",
+		  "placeholder": {
+			"code": "Menu01",
+			"name": "Tên menu 01",
+			"icon": "Icon",
+			"path": "/menu01",
+			"level": "---- Chọn level menu ----",
+			"parent": "---- Chọn menu cha ----",
+			"orderView": "---- Thứ tự 1 ----"
+		  }
+		}
+	},
+	"users":{
+        "staffName":"Nhân viên",
+        "staffEmail":"Email",
+        "staffMobile":"SĐT",
+        "staffPosition":"Chức vụ",
+        "staffBranch":"Chi nhánh",
+        "username":"Tên đăng nhập",
+        "note":"* Lưu ý",
+        "placeholder":{
+            "staffName":"----Chọn nhân viên----",
+            "username":"Nhập vào tên đăng nhập"
+        }
+    },
+	"staff": {
+        "no": "STT",
+        "code": "Mã nhân viên",
+        "name": "Tên nhân viên",
+        "position": "Chức vụ",
+        "branchId": "Chi nhánh",
+        "birthday": "Ngày sinh",
+        "idCard": "Số CMND",
+        "active": "Chức năng",
+        "email": "Email",
+        "address": "Địa chỉ",
+        "addrDetail":"Địa chỉ chi tiết",
+        "province": "Tỉnh/TP",
+        "district": " Quận/huyện",
+        "ward": "Xã/phường/TT",
+        "phone": "Điện thoại",
+        "status": "Trạng thái",
+        "placeholder": {
+            "code": "Nhập vào mã nhân viên",
+            "name": "Nhập vào tên nhân viên",
+            "email": "Nhập vào email",
+            "phone": "Nhập vào số điện thoại",
+            "birthday": "Nhập vào ngày sinh",
+            "idCard": "Nhập vào số CMND",
+            "addrDetail": "Nhập vào địa chỉ chi tiết",
+            "selectProvince": "-- Chọn tỉnh, thành phố--",
+            "selectDistrict": "-- Chọn quận, huyện --",
+            "selectWard": "-- Chọn Xã/phường/TT--"
+        }
+	},
+	"cars":{
+        "no":"STT",
+        "code":"Số hiệu xe",
+        "name":"Tên xe",
+        "licenseNumber":"Biển kiểm soát",
+        "brand":"Chi nhánh",
+        "ticket":"Nhãn hiệu xe",
+        "carType":"Loại xe",
+        "carColor":"Mầu sơn xe",
+        "yearOfManufacture":"Năm sản xuất",
+        "countryOfManufacture":"Nước sản xuất",
+        "firstRegisDate":"ngày đăng ký lần đầu",
+        "registryDateValid":"Ngày hết hạn đăng kiểm",
+        "registryDate":"Ngày đăng kiểm",
+        "lifetimeLimit":"Niên hạn sử dụng",
+        "weightTotal":"Tổng tải trọng (kg)",
+        "weightGoods":" Tải trọng hàng hóa (casstte)",
+        "avataUrl":"Ảnh đại diện xe",
+        "genneral":"Thông tin chung",
+        "carsDetail":"Thông tin chi tiết",
+        "status":"Trạng thái",
+        "action":"Chức năng",
+        "placeholder":{
+            "code":"Nhập vào số hiệu xe",
+            "name":"Nhập vào tên xe",
+            "licenseNumber":"Nhập vào biển kiểm soát",
+            "carColor":"Nhập vào mầu sơn xe",
+            "yearOfManufacture":"Nhập vào năm sản xuất",
+            "countryOfManufacture":"Nhập vào nước sản xuất",
+            "lifetimeLimit":"Nhập vào niên hạn sử dụng",
+            "weightTotal":"Nhập vào tổng tải trọng",
+            "weightGoods":"Nhập vào tải trọng hàng hóa",
+            "firstRegisDate":"Nhập vào ngày đăng ký lần đầu",
+            "registryDateValid":"Nhập vào ngày hết hạn đăng kiểm",
+            "registryDate":"Nhập vào ngày đăng kiểm",
+            "avataUrl":"Nhập vào ảnh đại diện xe",
+            "select":"--Chọn--",
+            "selectSearch":"--Tất cả--",
+            "date":"dd/mm/yyyy"
+        }
+    },
+    "branch": {
+        "no": "STT",
+        "code": "Mã chi nhánh",
+        "name": "Tên chi nhánh",
+        "active": "Chức năng",
+        "address": "Địa chỉ",
+        "addrDetail":"Địa chỉ chi tiết",
+        "province": "Tỉnh/TP",
+        "district": " Quận/huyện",
+        "ward": "Xã/phường/TT",
+        "status": "Trạng thái",
+        "staff": "Danh sách nhân viên",
+        "placeholder": {
+            "code": "Nhập vào mã chi nhánh",
+            "name": "Nhập vào tên chi nhánh",
+            "staffId":"Cán bộ phụ trách",
+            "addrDetail": "Nhập vào địa chỉ chi tiết",
+            "selectProvince": "-- Chọn tỉnh, thành phố--",
+            "selectDistrict": "-- Chọn quận, huyện --",
+            "selectWard": "-- Chọn Xã/phường/TT--"
+        }
+    },
+    "casstte":{
+        "no":"STT",
+        "code":"Mã cassette",
+        "type":"Chủng loại",
+        "storage":"Kho tiền",
+        "branch":"Chi nhánh",
+        "status":"Trạng thái",
+        "dateCreated":"Ngày tạo",
+        "userId":"Người tạo",
+        "lastUpdate":"Lần cuối cập nhật",
+        "userUpdate":"Người cập nhật",
+        "maxBill":"Số tờ tiền tối đa",
+        "value":"Mệnh giá",
+        "size":"Kích thước",
+        "stt":"STT cassette",
+        "placeholder":{
+            "maxBill":"Nhập vào số tờ tiền tối đa",
+            "code":"Nhập vào mã cassette",
+            "stt":"Nhập vào số thứ tự cassette"
+        }
+    },
+    "atms":{
+      "no":"STT",
+      "code":"Mã ATM",
+      "latitude":"Vĩ độ",
+      "longitude":"Kinh độ",
+      "addr":"Địa chỉ",
+      "status":"Trạng thái",
+      "userId":"Người tạo",
+      "dateCreated":"Ngày tạo",
+      "branch":"Chi nhánh",
+      "province":"Tỉnh/ TP",
+      "district":"Quận/ huyện/ TX",
+      "ward":"Xã / phường / TT",
+      "placeholder":{
+          "code":"Nhập vào mã ATM",
+          "latitude":"Nhập vào vĩ độ ATM",
+          "longitude":"Nhập vào kinh độ ATM",
+          "addr":"Nhập vào địa chỉ ATM"
+        }
+    },
+    "storages": {
+      "no": "STT",
+      "code": "Mã kho",
+      "name": "Tên kho",
+      "address": "Địa chỉ",
+      "fullAddr": "Địa chỉ chi tiết",
+      "staffManager": "Cán bộ phụ trách",
+      "dateCreated": "Ngày tạo",
+      "dateFrom": "Ngày tạo từ ngày",
+      "dateTo": "Ngày tạo đến ngày",
+      "unit": "Chi nhánh quản lý",
+      "branch":"Chi nhánh",
+      "status": "Trạng thái",
+      "function": "Chức năng",
+      "province": "Tỉnh/ TP",
+      "district": "Quận/ huyện/ thị xã",
+      "ward": "Xã/ phường/ thị trấn",
+      "existCode": "Mã kho tiền đã tồn tại",
+      "pattern": "Mã kho không được nhập ký tự đặc biệt",
+      "placeholder": {
+        "code": "Nhập vào mã kho",
+        "name": "Nhập vào tên kho",
+        "unit": "--Chọn chi nhánh--",
+        "status": "--Chọn trạng thái--",
+        "staff": "--Chọn cán bộ--",
+        "province": "---Chọn tỉnh/ thành phố---",
+        "district": "---Chọn quận/ huyện/ thị xã---",
+        "ward": "---Chọn xã/ phường/ thị trấn---",
+        "fullAddr": "Nhập vào địa chỉ chi tiết"
+      }
+    }
+
+}

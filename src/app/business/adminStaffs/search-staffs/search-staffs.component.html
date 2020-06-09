@@ -1,0 +1,148 @@
+<!-- loading -->
+<div class="loading" *ngIf="loading">Loading&#8230;</div>
+
+<div class="row page-titles">
+  <div class="col-md-12 align-self-center">
+    <div class="d-flex">
+      <ol class="breadcrumb">
+          <li class="breadcrumb-item"><a routerLink="/home/dashboard">{{'nav.home' | translate}}</a></li>
+          <li class="breadcrumb-item active">{{'nav.staffs' | translate}}</li>
+      </ol>
+    </div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-header card-custome">
+    <h4 class="m-b-0 card-title">{{'common.search.title' | translate}}</h4>
+  </div>
+  <div class="card-body">
+    <form class="form-horizontal m-t-30" novalidate [formGroup]="searchForm">
+      <div class="form-group row">
+        <label class="col-md-2 lbl-custome" >{{'staff.code' | translate}}</label>
+        <div class="col-md-4">
+          <input type="text" class="form-control" placeholder="{{'staff.placeholder.code' | translate}}" formControlName="code" trim="blur">
+        </div>
+        <label class="col-md-2 lbl-custome" >{{'staff.name' | translate}}</label>
+        <div class="col-md-4">
+          <input type="text" class="form-control" placeholder="{{'staff.placeholder.name' | translate}}" formControlName="name" trim="blur">
+        </div>
+      </div>
+      <div class="form-group row">
+        <label class="col-md-2 lbl-custome">{{'staff.idCard' | translate}}</label>
+        <div class="col-md-4">
+          <input type="text" class="form-control" placeholder="{{'staff.placeholder.idCard' | translate}}" formControlName="idcard" trim="blur">
+        </div>
+        <!--<label class="col-md-2 lbl-custome" >{{'staff.phone' | translate}}</label>
+        <div class="col-md-4">
+          <input type="text" class="form-control" placeholder="{{'staff.placeholder.phone' | translate}}" formControlName="phoneNumber" trim="blur">
+        </div>-->
+		    <label class="col-md-2 lbl-custome">{{'staff.branchId' | translate}}</label>
+        <div class="col-md-4">
+          <select class="form-control" formControlName="branchId">
+            <option value="">--Tất cả--</option>
+            <option  *ngFor="let bran of lstBranch" [ngValue]="bran.id">{{bran.name}}</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-group row">
+        <label class="col-md-2 lbl-custome">{{'staff.position' | translate}}</label>
+        <div class="col-md-4">
+          <select class="form-control selectpicker" data-none-results-text="Không tìm thấy kết quả" data-live-search="true" formControlName="position">
+            <option value="">--Tất cả--</option>
+            <option  *ngFor="let pos of lstPosition" [ngValue]="pos.id">{{pos.name}}</option>
+            
+          </select>
+        </div>
+        <label class="col-md-2 lbl-custome">{{'staff.status' | translate}}</label>
+        <div class="col-md-4">
+          <select class="form-control selectpicker" data-none-results-text="Không tìm thấy kết quả" data-live-search="true" formControlName="status" >
+            <option value="">--Tất cả--</option>
+            <option *ngFor="let stt of lstStatus" [ngValue]="stt.id">{{stt.name}}</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-group text-center">
+        <button type="submit" class="btn btn-info waves-effect waves-light m-r-10" (click)="searchData(null)">
+          <i class="ti-search"></i>
+          {{'common.btn.search' | translate}}
+        </button>
+        <button type="submit" class="btn btn-success waves-effect waves-light" (click)="openDialog(null)">
+          <i class="ti-plus"></i>
+          {{'common.btn.addnew' | translate}}
+        </button>
+      </div>
+
+    </form>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-header card-custome">
+    <h4 class="m-b-0 card-title">{{'common.search.result' | translate}}</h4>
+  </div>
+  <div class="card-body">
+    <!-- pagination -->
+    <div class="form-group pagination-custome">
+      <span class="search-title">Kết quả tìm kiếm <span class="fw-bold">{{totalRecord}}</span> bản ghi</span>
+      <pagination class="pagi" [totalItems]="totalRecord" [itemsPerPage]="maxPageView" previousText="&lsaquo;"
+        nextText="&rsaquo;" firstText="&laquo;" lastText="&raquo;" [boundaryLinks]="true" [maxSize]="size"
+        [(ngModel)]="page" (pageChanged)="searchData($event)">
+      </pagination>
+    </div>
+
+    <div class="table-responsive">
+      <table class="table table-bordered table-custome">
+        <thead>
+          <tr>
+            <th class="text-center w1">{{'staff.no' | translate}}</th>
+            <th class="text-center w8">{{'staff.code' | translate}}</th>
+            <th class="text-center w10">{{'staff.name' | translate}}</th>
+            <th class="text-center w10">{{'staff.branchId' | translate}}</th>
+            <th class="text-center"> {{'staff.address' | translate}}</th>
+            <th class="text-center w10">{{'staff.birthday' | translate}}</th>
+            <th class="text-center w10">{{'staff.idCard' | translate}}</th>
+            <th class="text-center w10">{{'staff.phone' | translate}}</th>
+            <th class="text-center w10">{{'staff.status' | translate}}</th>
+            <th class="text-center w8">{{'staff.active' | translate}}</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let item of lstRecord;index as i">
+            <td class="text-center">{{((page-1)*size)+(i+1)}}</td>
+            <td>{{item.code}}</td>
+            <td>{{item.name}}</td>
+            <td>{{item.branchDomain.name}}</td>
+            <td>{{item.addrDetail}},{{item.addr.fullName}}</td>
+            <td>{{item.dateOfBirth | date: 'dd/MM/yyyy'}}</td>
+            <td>{{item.idcard}}</td>
+            <td>{{item.phoneNumber}}</td>
+            <td>{{item.status == 1 ? 'Hoạt động' : 'Không hoạt động'}}</td>
+            <td class="text-center">
+              <ul class="nav list-inline nav-center">
+                <li tooltip="Thông tin chi tiết" (click)="detailsStaff(item)"><i class="fa fa-search"></i></li>
+                <li tooltip="Sửa thông tin nhân viên" (click)="openDialog(item)" ><i class="fa fa-pencil-square-o" aria-hidden="true"></i></li>
+                <li tooltip="Xóa thông tin nhân viên" (click)="confirmDeleted(item)"><i class="fa fa-trash-o" aria-hidden="true"></i></li>
+				        <li *ngIf="item.status === 1" tooltip="Khóa nhân viên" (click)="lockOrUnlock(item)"><i class="fa fa-lock" aria-hidden="true"></i></li>
+                <li *ngIf="item.status === 0" tooltip="Mở khóa nhân viên" (click)="lockOrUnlock(item)"><i class="fa fa-unlock-alt" aria-hidden="true"></i></li>
+              </ul>
+            </td>
+          </tr>
+          <tr  *ngIf ="lstRecord.length === 0">
+            <td class="text-center" colspan="9">{{'common.noresult' | translate}}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- pagination -->
+    <div class="form-group pagination-custome">
+      <pagination class="pagi" [totalItems]="totalRecord" [itemsPerPage]="maxPageView" previousText="&lsaquo;"
+        nextText="&rsaquo;" firstText="&laquo;" lastText="&raquo;" [boundaryLinks]="true" [maxSize]="size"
+        [(ngModel)]="page" (pageChanged)="searchData($event)">
+      </pagination>
+    </div>
+
+  </div>
+</div>

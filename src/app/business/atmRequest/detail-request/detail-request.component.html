@@ -1,0 +1,96 @@
+<!-- loading -->
+<div class="loading" *ngIf="loading">Loading&#8230;</div>
+
+<div class="modal-header modal-primary">
+  <h4 class="modal-title" [innerHTML]=title></h4>
+  <button type="button" class="close" aria-label="Close" (click)="close()">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+
+<div class="modal-body">
+  <div class="form-group row">
+    <label class="col-md-2 lbl-custome">
+      Mã yêu cầu:
+    </label>
+    <div class="col-md-4">
+      <span class="input-view-data">{{detailItem.code}}</span>
+    </div>
+    <label class="col-md-2 lbl-custome">
+      Chi nhánh:
+    </label>
+    <div class="col-md-4">
+      <span class="input-view-data">{{detailItem.branchName}}</span>
+    </div>
+  </div>
+  <div class="form-group row">
+    <label class="col-md-2 lbl-custome">
+      Số lượng ATM:
+    </label>
+    <div class="col-md-4">
+      <span class="input-view-data">{{detailItem.countAtmRequest}}</span>
+    </div>
+    <label class="col-md-2 lbl-custome">
+      Trạng thái:
+    </label>
+    <div class="col-md-4">
+      <span class="input-view-data" *ngIf='detailItem.status === 0'>Chờ tiếp nhận</span>
+      <span class="input-view-data" *ngIf='detailItem.status === 1'>Đã tiếp nhận</span>
+      <span class="input-view-data" *ngIf='detailItem.status === 2'>Từ chối</span>
+    </div>
+  </div>
+  <div class="form-group row">
+    <label class="col-md-2 lbl-custome ">
+      Ngày yêu cầu:
+    </label>
+    <div class="col-md-4">
+      <span class="input-view-data">{{detailItem.dateRequestFrom | date: 'dd/MM/yyyy hh:mm:ss'}}</span>
+    </div>
+    <label class="col-md-2 lbl-custome">
+      Ngày hoàn thành:
+    </label>
+    <div class="col-md-4">
+      <span class="input-view-data">{{detailItem.dateRequestTo | date: 'dd/MM/yyyy hh:mm:ss'}}</span>
+    </div>
+  </div>
+
+  <fieldset class="fieldset-note">
+    <legend class="legend-custome">Danh sách ATM</legend>
+    <div class="table-responsive">
+      <table class="table table-bordered table-custome">
+        <thead>
+          <tr>
+            <th class="text-center w1">STT</th>
+            <th class="text-center w10">Mã hiệu máy</th>
+            <th class="text-center w20">Địa chỉ máy ATM</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let item of lstRecord;index as i">
+            <td class="text-center">{{i+1}}</td>
+            <td>{{item.code}}</td>
+            <td>{{item.addrDetail}}, {{item.addr.fullName}}</td>
+          </tr>
+          <tr *ngIf="lstRecord.length===0">
+            <td class="text-center" colspan="5">{{'common.noresult' | translate}}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </fieldset>
+</div>
+
+<div class="modal-footer">
+  <!-- <button type="button" class="btn btn-success waves-effect waves-light m-r-10" (click)="openDialog(null)">
+    <i class="ti-check"></i>
+    Tiếp nhận
+  </button>
+  <button type="button" class="btn btn-warning waves-effect waves-light" (click)="openDialog(null)">
+    <i class="ti ti-close"></i>
+    Từ chối
+  </button> -->
+  <button type="button" class="btn btn-danger" (click)="close()">
+    <i class="fa fa-times-circle"></i>
+    {{'common.close' | translate}}
+  </button>
+</div>

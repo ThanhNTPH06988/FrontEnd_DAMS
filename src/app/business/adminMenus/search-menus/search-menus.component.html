@@ -1,0 +1,183 @@
+<!-- loading -->
+<div class="loading" *ngIf="loading">Loading&#8230;</div>
+
+<div class="row page-titles">
+  <div class="col-md-12 align-self-center">
+    <div class="d-flex">
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a routerLink="/home/dashboard">{{'nav.home' | translate}}</a></li>
+        <li class="breadcrumb-item active">{{'nav.menus' | translate}}</li>
+      </ol>
+    </div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-header card-custome">
+    <h4 class="m-b-0 card-title">{{'common.search.title' | translate}}</h4>
+  </div>
+  <div class="card-body">
+    <form class="form-material form-horizontal m-t-30" novalidate [formGroup]="searchForm">
+      <div class="form-group row">
+        <div class="col-md-4">
+          <label class="lbl-custome" for="example-text">{{'menus.code' | translate}}</label>
+          <input type="text" class="form-control" placeholder="Mã menu" formControlName="code">
+        </div>
+        <div class="col-md-4">
+          <label class="lbl-custome" for="example-text">{{'menus.name' | translate}}</label>
+          <input type="text"  class="form-control" placeholder="Tên menu" formControlName="name">
+        </div>
+        <div class="col-md-4">
+          <label class="lbl-custome" for="example-text">{{'menus.status' | translate}}</label>
+          <select class="form-control" formControlName="status">
+            <option value="">--Chọn trạng thái--</option>
+            <option *ngFor="let st of lstStatus;" [ngValue]="st.id">{{st.name}}</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-group row">
+        <div class="col-md-4">
+          <label class=" lbl-custome" for="example-text">{{'menus.dateCreated' | translate}}</label>
+          <div class="input-group">
+            <input type="text" class="form-control datepicker" placeholder="Ngày tạo từ (dd/mm/yyyy)" bsDatepicker #dpTo="bsDatepicker" formControlName="dateCreatedTo">
+            <div class="input-group-append">
+              <button class="waves-effect waves-light input-group-text input-group-custome" (click)="dpTo.show()">
+                <i class="fa fa-calendar" aria-hidden="true"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <label class="lbl-custome" for="example-text">{{'menus.dateCreated' | translate}}</label>
+          <div class="input-group">
+            <input type="text" class="form-control datepicker" placeholder="Ngày tạo đến (dd/mm/yyyy)" bsDatepicker #dpFrom="bsDatepicker" formControlName="dateCreatedFrom">
+            <div class="input-group-append">
+              <button class="waves-effect waves-light input-group-text input-group-custome" (click)="dpFrom.show()">
+                <i class="fa fa-calendar" aria-hidden="true"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="form-group text-center">
+        <button type="submit" class="btn btn-info waves-effect waves-light m-r-10" (click)="search(null)">
+          <i class="ti-search"></i>
+          {{'common.btn.search' | translate}}
+        </button>
+        <button type="submit" class="btn btn-success waves-effect waves-light" (click)="openDialog(null,null,false)">
+          <i class="ti-plus"></i>
+          {{'common.btn.addnew' | translate}}
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-header card-custome">
+    <h4 class="m-b-0 card-title">{{'common.search.result' | translate}}</h4>
+  </div>
+  <div class="card-body">
+    <!-- pagination -->
+    <div class="form-group pagination-custome">
+      <span class="search-title">Kết quả tìm kiếm <b>{{totalRecord}}</b> bản ghi</span>
+      <pagination class="pagi" [totalItems]="totalRecord" [itemsPerPage]="maxPageView" previousText="&lsaquo;"
+        nextText="&rsaquo;" firstText="&laquo;" lastText="&raquo;" [boundaryLinks]="true" [maxSize]="size"
+        [(ngModel)]="page" (pageChanged)="searchRegisByCode($event)">
+      </pagination>
+    </div>
+
+    <div class="table-responsive">
+      <table class="table table-bordered table-custome">
+        <thead>
+          <tr>
+            <th class="text-center w1">{{'menus.no' | translate}}</th>
+            <th class="text-center w10">{{'menus.code' | translate}}</th>
+            <th class="text-center">{{'menus.name' | translate}}</th>
+            <th class="text-center w10">{{'menus.dateCreated' | translate}}</th>
+            <th class="text-center">{{'menus.path' | translate}}</th>
+            <th class="text-center w5">{{'menus.level' | translate}}</th>
+            <th class="text-center w10">{{'menus.orderView' | translate}}</th>
+            <th class="text-center w10">{{'menus.status' | translate}}</th>
+            <th class="text-center w10">{{'menus.action' | translate}}</th>
+          </tr>
+        </thead>
+        <tbody *ngFor="let item of lstRecord;index as i">
+          <tr>
+            <td class="text-center">{{((page-1)*size)+(i+1)}}</td>
+            <td>{{item.code}}</td>
+            <td translate>{{item.name}}</td>
+            <td class="text-center">{{item.dateCreated | date: 'dd/MM/yyyy'}}</td>
+            <td>{{item.urlPath}}</td>
+            <td class="text-center">{{item.menuLevel}}</td>
+            <td class="text-center">{{item.orderIndex}}</td>
+            <td class="text-center">{{item.status === 1 ? 'Hoạt động' : 'Không hoạt động' }}</td>
+            <td class="text-center">
+              <ul class="nav list-inline nav-center">
+                <li tooltip="Danh sách Menu con" *ngIf="item.isSubmenu===1" (click)="openSubmenu(item)"><i class="fa fa-file-text-o" aria-hidden="true"></i></li>
+                <li tooltip="Thêm mới Menu con" *ngIf="item.isSubmenu===1" (click)="openDialog(null,item,true)"><i class="fa fa-plus-square-o" aria-hidden="true"></i></li>
+                <li tooltip="Sửa" (click)="openDialog(item,null,false)"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></li>
+                <li tooltip="Xóa" (click)="confirmDeleted(item)"><i class="fa fa-trash-o" aria-hidden="true"></i></li>
+              </ul>
+            </td>
+          </tr>
+          <tr *ngIf="item.tblSub">
+            <td colspan="9">
+              <!-- pagination -->
+              <div class="form-group pagination-custome">
+                <pagination class="pagi" [totalItems]="item.submenu.totalRecord" [itemsPerPage]="item.submenu.maxPageView" previousText="&lsaquo;"
+                  nextText="&rsaquo;" firstText="&laquo;" lastText="&raquo;" [boundaryLinks]="true" [maxSize]="item.submenu.size"
+                  [(ngModel)]="item.submenu.page" (pageChanged)="searchSubmenu(item,$event)">
+                </pagination>
+              </div>
+              <table class="table table-bordered table-custome">
+                <thead>
+                  <tr>
+                    <th class="text-center w1">{{'menus.no' | translate}}</th>
+                    <th class="text-center w10">{{'menus.code' | translate}}</th>
+                    <th class="text-center">{{'menus.name' | translate}}</th>
+                    <th class="text-center">{{'menus.path' | translate}}</th>
+                    <th class="text-center w10">{{'menus.orderView' | translate}}</th>
+                    <th class="text-center w10">{{'menus.status' | translate}}</th>
+                    <th class="text-center w10">{{'menus.action' | translate}}</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let sub of item.submenu.lstMenus;index as j">
+                    <td class="text-center">{{((item.submenu.page-1)*item.submenu.size)+(j+1)}}</td>
+                    <td>{{sub.code}}</td>
+                    <td translate>{{sub.name}}</td>
+                    <td>{{sub.urlPath}}</td>
+                    <td class="text-center">{{sub.orderIndex}}</td>
+                    <td class="text-center">{{sub.status === 1 ? 'Hoạt động' : 'Không hoạt động' }}</td>
+                    <td class="text-center">
+                      <ul class="nav list-inline nav-center">
+                        <li tooltip="Sửa" (click)="openDialog(sub,sub,true)"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></li>
+                        <li tooltip="Xóa"><i class="fa fa-trash-o" aria-hidden="true"></i></li>
+                      </ul>
+                    </td>
+                  </tr>
+                  <tr *ngIf="item.submenu.lstMenus.length===0">
+                    <td class="text-center" colspan="7">{{'common.noresult' | translate}}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </td>
+          </tr>
+          <tr *ngIf="lstRecord.length===0">
+            <td class="text-center" colspan="9">{{'common.noresult' | translate}}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- pagination -->
+    <div class="form-group pagination-custome">
+      <pagination class="pagi" [totalItems]="totalRecord" [itemsPerPage]="maxPageView" previousText="&lsaquo;"
+        nextText="&rsaquo;" firstText="&laquo;" lastText="&raquo;" [boundaryLinks]="true" [maxSize]="size"
+        [(ngModel)]="page" (pageChanged)="searchRegisByCode($event)">
+      </pagination>
+    </div>
+
+  </div>
+</div>

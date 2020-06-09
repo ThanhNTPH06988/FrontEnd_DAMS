@@ -1,0 +1,109 @@
+<!-- loading -->
+<div class="loading" *ngIf="loading">Loading&#8230;</div>
+
+<div class="row page-titles">
+  <div class="col-md-12 align-self-center">
+    <div class="d-flex">
+      <ol class="breadcrumb">
+          <li class="breadcrumb-item"><a routerLink="/home/dashboard">{{'nav.home' | translate}}</a></li>
+          <li class="breadcrumb-item active">{{'nav.params' | translate}}</li>
+      </ol>
+    </div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-header card-custome">
+    <h4 class="m-b-0 card-title">{{'common.search.title' | translate}}</h4>
+  </div>
+  <div class="card-body">
+    <form class="form-horizontal m-t-30" novalidate [formGroup]="searchForm">
+      <div class="form-group row">
+        <label class="col-md-2 lbl-custome">Mã tham số</label>
+        <div class="col-md-4">
+          <input type="text" class="form-control" placeholder="Nhập vào mã tham số" formControlName="paramCode">
+        </div>
+        <label class="col-md-2 lbl-custome">Loại tham số</label>
+        <div class="col-md-4">
+          <select class="form-control" formControlName="paramType">
+            <option value="">Tất cả</option>
+            <option>Hoạt động</option>
+            <option>Không hoạt động</option>
+          </select>        
+        </div>
+      </div>
+
+      <div class="form-group text-center">
+        <button type="submit" class="btn btn-info waves-effect waves-light m-r-10" (click)="search(null)">
+          <i class="ti-search"></i>
+          {{'common.btn.search' | translate}}
+        </button>
+        <!-- <button type="submit" class="btn btn-success waves-effect waves-light" (click)="openDialog(null)">
+          <i class="ti-plus"></i>
+          {{'common.btn.addnew' | translate}}
+        </button> -->
+      </div>
+    </form>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-header card-custome">
+    <h4 class="m-b-0 card-title">{{'common.search.result' | translate}}</h4>
+  </div>
+  <div class="card-body">
+    <!-- pagination -->
+    <div class="form-group pagination-custome">
+      <span class="search-title">Kết quả tìm kiếm <span class="fw-bold">{{totalRecord}}</span> bản ghi</span>
+      <pagination class="pagi" [totalItems]="totalRecord" [itemsPerPage]="maxPageView" previousText="&lsaquo;"
+        nextText="&rsaquo;" firstText="&laquo;" lastText="&raquo;" [boundaryLinks]="true" [maxSize]="size"
+        [(ngModel)]="page" (pageChanged)="searchRegisByCode($event)">
+      </pagination>
+    </div>
+
+    <div class="table-responsive">
+      <table class="table table-bordered table-custome">
+        <thead>
+          <tr>
+            <th class="text-center w1">STT</th>
+            <th class="text-center w10">Mã tham số</th>
+            <th class="text-center w10">Loại tham số</th>
+            <th class="text-center w10">Người tạo</th>
+            <th class="text-center">Ngày tạo</th>
+            <th class="text-center">Giá trị tham số</th>
+            <th class="text-center w10">Mô tả</th>
+            <th class="text-center w10">Chức năng</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let item of lstRecord;index as i">
+            <td class="text-center">{{((page-1)*size)+(i+1)}}</td>
+            <td>{{item.userName}}</td>
+            <td>{{item.dateCreated | date: 'dd/MM/yyyy'}}</td>
+            <td>{{item.userNameCreate != null ? item.userNameCreate : 'Admin hệ thống'}}</td>
+            <td>{{item.staffDomain != null ? item.staffDomain.name : ''}}</td>
+            <td>{{item.staffDomain != null && item.staffDomain.staffPositionDomain != null ? item.staffDomain.staffPositionDomain.name : ''}}</td>
+            <td>{{item.lastLogin | date: 'dd/MM/yyyy'}}</td>
+            <td class="text-center">
+              <ul class="nav list-inline nav-center">
+                <li tooltip="Xóa tài khoản" (click)="confirmDeleted(item)"><i class="fa fa-trash-o" aria-hidden="true"></i></li>
+              </ul>
+            </td>
+          </tr>
+          <tr *ngIf="lstRecord.length===0">
+            <td class="text-center" colspan="8">{{'common.noresult' | translate}}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- pagination -->
+    <div class="form-group pagination-custome">
+      <pagination class="pagi" [totalItems]="totalRecord" [itemsPerPage]="maxPageView" previousText="&lsaquo;"
+        nextText="&rsaquo;" firstText="&laquo;" lastText="&raquo;" [boundaryLinks]="true" [maxSize]="size"
+        [(ngModel)]="page" (pageChanged)="searchRegisByCode($event)">
+      </pagination>
+    </div>
+
+  </div>
+</div>

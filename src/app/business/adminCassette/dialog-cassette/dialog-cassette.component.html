@@ -1,0 +1,127 @@
+<!-- loading -->
+<div class="loading" *ngIf="loading">Loading&#8230;</div>
+
+<div class="modal-header modal-primary">
+  <h4 class="modal-title" [innerHTML]=title></h4>
+  <button type="button" class="close" aria-label="Close" (click)="close()">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+
+<div class="modal-body">
+  <form class="form-horizontal" novalidate [formGroup]="casstteForm">
+    <div class="form-group row">
+      <label class="col-md-2 lbl-custome">{{'casstte.code' | translate}}
+        <sup class="msg-invalid">(*)</sup>
+      </label>
+      <div class="col-md-4">
+        <input type="text" class="form-control" placeholder="{{'casstte.placeholder.code' | translate}}"
+          [ngClass]="{ 'is-invalid': submitted && f.code.errors }" trim="blur" formControlName="code" [readonly]="isReadOnly" trim upper>
+        <div *ngIf="submitted && f.code.errors">
+          <span class="msg-invalid" *ngIf="f.code.errors.required">{{'common.msg.required' | translate}}</span>
+          <span class="msg-invalid" *ngIf="f.code.errors.maxlength">Độ dài tối đa 5 ký tự</span>
+        </div>
+      </div>
+      <label class="col-md-2 lbl-custome">{{'casstte.stt' | translate}}
+        <sup class="msg-invalid">(*)</sup>
+      </label>
+      <div class="col-md-4">
+        <input type="text" class="form-control" placeholder="{{'casstte.placeholder.stt' | translate}}"
+          [ngClass]="{ 'is-invalid': submitted && f.stt.errors }" formControlName="stt" trim onlyNumber>
+        <div *ngIf="submitted && f.stt.errors">
+          <span class="msg-invalid" *ngIf="f.stt.errors.required">{{'common.msg.required' | translate}}</span>
+          <span class="msg-invalid" *ngIf="f.stt.errors.maxlength">Độ dài tối đa 3 ký tự</span>
+        </div>
+      </div>
+    </div>
+    <div class="form-group row">
+      <label class="col-md-2 lbl-custome">{{'casstte.maxBill' | translate}}
+        <sup class="msg-invalid">(*)</sup>
+      </label>
+      <div class="col-md-4">
+        <input type="text" class="form-control" placeholder="{{'casstte.placeholder.maxBill' | translate}}"
+          [ngClass]="{ 'is-invalid': submitted && f.maxBill.errors }" formControlName="maxBill" trim onlyNumber>
+        <div *ngIf="submitted && f.maxBill.errors">
+          <span class="msg-invalid" *ngIf="f.maxBill.errors.required">{{'common.msg.required' | translate}}</span>
+          <span class="msg-invalid" *ngIf="f.maxBill.errors.maxlength">Độ dài tối đa 10 ký tự</span>
+        </div>
+      </div>
+      <label class="col-md-2 lbl-custome">{{'casstte.type' | translate}}
+        <sup class="msg-invalid">(*)</sup>
+      </label>
+      <div class="col-md-4">
+        <select class="form-control selectpicker" [ngClass]="{ 'is-invalid': submitted && f.typeId.errors }"
+          formControlName="typeId" (change)="onChangeType()">
+          <option value="">--Chọn chủng loại--</option>
+          <option *ngFor="let type of lstType;" [ngValue]="type.id">{{type.name}}</option>
+        </select>
+        <div *ngIf="submitted && f.typeId.errors">
+          <span class="msg-invalid" *ngIf="f.typeId.errors.required">{{'common.msg.required' | translate}}</span>
+        </div>
+      </div>
+    </div>
+    <div class="form-group row">
+      <label class="col-md-2 lbl-custome"> {{'casstte.value' | translate}}</label>
+      <div class="col-md-4">
+        <span class="input-view-data">{{casstteType.value}}</span>
+      </div>
+      <label class="col-md-2 lbl-custome"> {{'casstte.size' | translate}}</label>
+      <div class="col-md-4">
+        <span class="input-view-data">{{casstteType.size}}</span>
+      </div>
+    </div>
+    <div class="form-group row">
+      <label class="col-md-2 lbl-custome">{{'casstte.storage' | translate}}
+        <sup class="msg-invalid">(*)</sup>
+      </label>
+      <div class="col-md-4">
+        <select class="form-control selectpicker" [ngClass]="{ 'is-invalid': submitted && f.storageId.errors }"
+          formControlName="storageId">
+          <option value="">--Chọn kho chứa tiền--</option>
+          <option *ngFor="let st of lstStorage;" [ngValue]="st.id">{{st.name}}</option>
+        </select>
+        <div *ngIf="submitted && f.storageId.errors">
+          <span class="msg-invalid" *ngIf="f.storageId.errors.required">{{'common.msg.required' | translate}}</span>
+        </div>
+      </div>
+      <label class="col-md-2 lbl-custome">{{'admin.atms.branch' | translate}}
+        <sup class="msg-invalid">(*)</sup>
+      </label>
+      <div class="col-md-4">
+        <select class="form-control selectpicker" [ngClass]="{ 'is-invalid': submitted && f.branchId.errors }"
+          formControlName="branchId">
+          <option value="">--Chọn chi nhánh--</option>
+          <option *ngFor="let br of lstBranch;" [ngValue]="br.id">{{br.name}}</option>
+        </select>
+        <div *ngIf="submitted && f.branchId.errors">
+          <span class="msg-invalid" *ngIf="f.branchId.errors.required">{{'common.msg.required' | translate}}</span>
+        </div>
+      </div>
+    </div>
+    <div class="form-group row">
+    <label *ngIf="item !== null" class="col-md-2 lbl-custome">{{'admin.atms.status' | translate}}
+      <sup class="msg-invalid">(*)</sup>
+    </label>
+    <div class="col-md-4" *ngIf="item !== null">
+      <select class="form-control" formControlName="status">
+        <option value="">--Chọn trạng thái--</option>
+        <option *ngFor="let st of lstStatus;" [ngValue]="st.id">{{st.name}}</option>
+      </select>
+      <div *ngIf="submitted && f.status.errors">
+        <span class="msg-invalid" *ngIf="f.status.errors.required">Thông tin bắt buộc nhập</span>
+      </div>
+    </div>
+</div>
+</form>
+</div>
+
+<div class="modal-footer">
+  <button type="button" class="btn btn-info mr-2" (click)="saveOrUpdate(null)">
+    <i class="fa fa-save"></i>
+    Lưu
+  </button>
+  <button type="button" class="btn btn-danger" (click)="close()">
+    <i class="fa fa-times-circle"></i>
+    Đóng
+  </button>
+</div>

@@ -1,0 +1,224 @@
+<!-- loading -->
+<div class="loading" *ngIf="loading">Loading&#8230;</div>
+
+<div class="modal-header modal-primary">
+  <h4 class="modal-title" [innerHTML]=title></h4>
+  <button type="button" class="close" aria-label="Close" (click)="close()">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+
+<div class="modal-body">
+  <form class="form-horizontal" novalidate [formGroup]="usersForm" *ngIf="item === null">
+    <div class="form-group row">
+      <label class="col-md-2 lbl-custome">
+        Chi nhánh
+        <sup class="msg-invalid">(*)</sup>
+      </label>
+      <div class="col-md-4">
+        <select class="form-control" tooltip="Chọn chi nhánh"  formControlName="branchId" [ngClass]="{ 'is-invalid': submitted && f.branchId.errors }" (change)="getStaffByBranch()">
+          <option value="">----Chọn chi nhánh----</option>
+          <option *ngFor="let branch of lstBranch;" [ngValue]="branch.id">
+            {{branch.name}}
+          </option>
+        </select>
+        <div *ngIf="submitted && f.branchId.errors">
+          <span class="msg-invalid" *ngIf="f.branchId.errors.required">{{'common.msg.required' | translate}}</span>
+        </div>
+      </div>
+      <label class="col-md-2 lbl-custome">
+        {{'users.staffName' | translate}}
+        <sup class="msg-invalid">(*)</sup>
+      </label>
+      <div class="col-md-4">
+        <select class="form-control" tooltip="Chọn nhân viên"  formControlName="staffId" [ngClass]="{ 'is-invalid': submitted && f.staffId.errors }" (change)="onChangeStaff()">
+          <option value="">{{'users.placeholder.staffName' | translate}}</option>
+          <option *ngFor="let staff of lstStaff;" [ngValue]="staff.id">
+            {{staff.name}}
+          </option>
+        </select>
+        <div *ngIf="submitted && f.staffId.errors">
+          <span class="msg-invalid" *ngIf="f.staffId.errors.required">{{'common.msg.required' | translate}}</span>
+        </div>
+      </div>
+    </div>
+    <div class="form-group row">
+      <label class="col-md-2 lbl-custome">
+        {{'users.username' | translate}}
+        <sup class="msg-invalid">(*)</sup>
+      </label>
+      <div class="col-md-4">
+        <input type="text" class="form-control" formControlName="userName" [ngClass]="{ 'is-invalid': submitted && f.userName.errors }" placeholder="{{'users.placeholder.username' | translate}}" trim>
+        <div *ngIf="submitted && f.userName.errors">
+          <span class="msg-invalid" *ngIf="f.userName.errors.required">{{'common.msg.required' | translate}}</span>
+        </div>
+        <div *ngIf="submitted && isExitUsername">
+          <span class="msg-invalid">Tên đăng nhập đã tồn tại</span>
+        </div>
+      </div>
+      <label class="col-md-2 lbl-custome">Ảnh đại diện</label>
+      <div class="col-md-4">
+        <div class="input-group">
+          <span class="input-view-data avt">{{f.avatarName.value}}</span>
+          <div class="input-group-append posRel">
+            <button class="waves-effect waves-light input-group-text input-group-custome" (click)="deletedAvatar()" tooltip="Xóa ảnh đại diện" *ngIf="clearAvatar">
+              <i class="fa fa-trash-o" aria-hidden="true"></i>
+            </button>
+            <button class="waves-effect waves-light input-group-text input-group-custome" (click)="file.click()" tooltip="Tải ảnh đại diện" *ngIf="!clearAvatar">
+              <i class="fa fa-upload" aria-hidden="true"></i>
+            </button>
+            <input hidden type="file" #file (change)="onUploadAvatar($event)" accept="image/*" style="display: none;">
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="form-group row">
+      <label class="col-md-2 lbl-custome"> {{'users.staffPosition' | translate}}</label>
+      <div class="col-md-4">
+        <span class="input-view-data">{{staffChoice.position}}</span>
+      </div>
+      <label class="col-md-2 lbl-custome"> {{'users.staffEmail' | translate}}</label>
+      <div class="col-md-4">
+        <span class="input-view-data">{{staffChoice.email}}</span>
+      </div>
+    </div>
+    <div class="form-group row">
+      <label class="col-md-2 lbl-custome"> {{'users.staffMobile' | translate}}</label>
+      <div class="col-md-4">
+        <span class="input-view-data">{{staffChoice.phone}}</span>
+      </div>
+    </div>
+    <div class="form-group">
+      <fieldset class="fieldset-note">        
+        <span class="fw-bold">{{'users.note' | translate}}</span>
+        <ol>
+          <li>Mật khẩu đăng nhập mặc định sẽ được gửi vào email của nhân viên</li>
+          <li>Mật khẩu xác nhận giao dịch mặc định sẽ được gửi vào email của nhân viên <i>(Chỉ dành cho nhân viên thủ quỹ ATM và nhân viên kho)</i> </li>
+          <li>Mật khẩu đăng nhập và mật khẩu xác nhận giao dịch sẽ được gửi vào email của nhân viên</li>
+          <li>Nhân viên có thể thay đổi mật khẩu mặc định sau khi đăng nhập thành công</li>
+        </ol>
+      </fieldset>
+    </div>
+  </form>
+
+  <!-- sua thong tin user -->
+  <div class="form-group" *ngIf="item !== null">
+    <div class="form-group row">
+      <label class="col-md-2 lbl-custome">Mã nhân viên</label>
+      <div class="col-md-4">
+        <span class="input-view-data">{{item.staffDomain != null ? item.staffDomain.code : ''}}</span>
+      </div>
+      <label class="col-md-2 lbl-custome">Tên nhân viên</label>
+      <div class="col-md-4">
+        <span class="input-view-data">{{item.staffDomain != null ? item.staffDomain.name : ''}}</span>
+      </div>
+    </div>
+    <div class="form-group row">
+      <label class="col-md-2 lbl-custome">Tên đăng nhập</label>
+      <div class="col-md-4">
+        <span class="input-view-data">{{item.userName}}</span>
+      </div>
+      <label class="col-md-2 lbl-custome">Chức vụ</label>
+      <div class="col-md-4">
+        <span class="input-view-data">{{item.staffDomain != null ? item.staffDomain.staffPositionDomain.name : ''}}</span>
+      </div>
+    </div>
+    <div class="form-group row">
+      <label class="col-md-2 lbl-custome">Số lần đăng nhập</label>
+      <div class="col-md-4">
+        <span class="input-view-data">{{item.numberLogin}}</span>
+      </div>
+      <label class="col-md-2 lbl-custome">Lần đăng nhập cuối cùng</label>
+      <div class="col-md-4">
+        <span class="input-view-data">{{item.lastLogin | date: 'dd/MM/yyyy HH:mm:ss'}}</span>
+      </div>
+    </div>
+
+  </div>
+  
+  <!-- phan quyen -->
+  <div class="form-group row cl-mb cl-mlr">
+    <div class="fieldset-left">
+      <fieldset class="fieldset-custome">
+        <legend class="legend-custome">Danh sách quyền trong hệ thống</legend>
+        <div class="table-responsive">
+          <table class="table table-bordered table-custome">
+            <thead>
+              <tr>
+                <th class="text-center w1">STT</th>
+                <th class="text-center w1"><input type="checkbox" [(ngModel)]="chkAllNoGrant" (change)="checkGrant(0)"></th>
+                <th class="text-center w10">Mã quyền</th>
+                <th class="text-center w10">Tên quyền</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let noGrant of lstRoleNoGrant;index as i">
+                <td class="text-center">{{(i+1)}}</td>
+                <td class="text-center"><input type="checkbox" [(ngModel)]="noGrant.choice" (change)="checkGrantItem(0)"></td>
+                <td>{{noGrant.code}}</td>
+                <td>{{noGrant.name}}</td>
+              </tr>
+              <tr *ngIf="lstRoleNoGrant.length===0">
+                <td class="text-center" colspan="4">{{'common.noresult' | translate}}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </fieldset>
+    </div>
+    <div class="fieldset-center form-group cl-mb text-center">
+      <ul class="nav grant-button">
+        <li>
+          <button type="submit" class="btn btn-success waves-effect waves-light" (click)="moveRight()">
+            <i class="ti-angle-right"></i>
+          </button>
+        </li>
+        <li>
+          <button type="submit" class="btn btn-info waves-effect waves-light" (click)="moveLeft()">
+            <i class="ti-angle-left"></i>
+          </button>
+        </li>
+      </ul>
+    </div>
+    <div class="fieldset-right">
+      <fieldset class="fieldset-custome">
+        <legend class="legend-custome">Danh sách quyền trong hệ thống</legend>
+        <div class="table-responsive">
+          <table class="table table-bordered table-custome">
+            <thead>
+              <tr>
+              <th class="text-center w1">STT</th>
+              <th class="text-center w1"><input type="checkbox" [(ngModel)]="chkAllGrant" (change)="checkGrant(1)"></th>
+              <th class="text-center w10">Mã quyền</th>
+              <th class="text-center w10">Tên quyền</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let grant of lstRoleGrant;index as i">
+                <td class="text-center">{{(i+1)}}</td>
+                <td class="text-center"><input type="checkbox" [(ngModel)]="grant.choice" (change)="checkGrantItem(1)"></td>
+                <td>{{grant.code}}</td>
+                <td>{{grant.name}}</td>
+              </tr>
+              <tr *ngIf="lstRoleGrant.length===0">
+                <td class="text-center" colspan="4">{{'common.noresult' | translate}}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </fieldset>
+    </div>
+  </div>
+
+</div>
+
+<div class="modal-footer">
+  <button type="button" class="btn btn-info mr-2" (click)="saveOrUpdate()">
+    <i class="fa fa-save"></i>
+    Lưu
+  </button>
+  <button type="button" class="btn btn-danger" (click)="close()">
+    <i class="fa fa-times-circle"></i>
+    Đóng
+  </button>
+</div>

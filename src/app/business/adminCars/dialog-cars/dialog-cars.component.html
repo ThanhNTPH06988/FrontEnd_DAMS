@@ -1,0 +1,238 @@
+<!-- loading -->
+<div class="loading" *ngIf="loading">Loading&#8230;</div>
+
+<div class="modal-header modal-primary">
+  <h4 class="modal-title" [innerHTML]=title></h4>
+  <button type="button" class="close" aria-label="Close" (click)="close()">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+<div class="modal-body">
+  <form class="form-horizontal" novalidate [formGroup]="carForm">
+    <div class="card">
+      <div class="form-group row cl-mb cl-mlr">
+        <fieldset class="fieldset-custome-cars w100">
+          <legend class="legend-custome">{{'cars.genneral' | translate}}</legend>
+          <div class="form-group row">
+            <label class="col-md-2 lbl-custome">{{'cars.code' | translate}} <sup class="msg-invalid">(*)</sup></label>
+            <div class="col-md-4">
+              <input type="text" class="form-control" formControlName="code" [ngClass]="{ 'is-invalid': submitted && f.code.errors }" 
+              placeholder="{{'cars.placeholder.code' | translate}}">
+              <div *ngIf="submitted && f.code.errors">
+                <span class="msg-invalid" *ngIf="f.code.errors.required">{{'common.msg.required' | translate}}</span>
+              </div>
+              <div *ngIf="submitted && isExitCode">
+                <span class="msg-invalid">Số hiệu xe đã tồn tại</span>
+              </div>
+            </div>
+              <label class="col-md-2 lbl-custome">{{'cars.name' | translate}} <sup class="msg-invalid">(*)</sup></label>
+              <div class="col-md-4">
+                <input type="text" class="form-control" formControlName="name" [ngClass]="{ 'is-invalid': submitted && f.name.errors }" placeholder="{{'cars.placeholder.name' | translate}}">
+                <div *ngIf="submitted && f.name.errors">
+                  <span class="msg-invalid" *ngIf="f.name.errors.required">{{'common.msg.required' | translate}}</span>
+                </div>
+              </div>
+          </div>
+          <div class="form-group row">
+            <label class="col-md-2 lbl-custome">{{'cars.licenseNumber' | translate}} <sup class="msg-invalid">(*)</sup></label>
+            <div class="col-md-4">
+              <input type="text" class="form-control" formControlName="licenseNumber" [ngClass]="{ 'is-invalid': submitted && f.licenseNumber.errors }" 
+              placeholder="{{'cars.placeholder.licenseNumber' | translate}}" upper>
+              <div *ngIf="submitted && f.licenseNumber.errors">
+                <span class="msg-invalid" *ngIf="f.licenseNumber.errors.required">{{'common.msg.required' | translate}}</span>
+                <span class="msg-invalid" *ngIf="f.licenseNumber.errors.pattern">{{'common.specialCharactor' | translate}}</span>
+              </div>
+            </div>
+            <label class="col-md-2 lbl-custome">{{'cars.brand' | translate}}<sup class="msg-invalid">(*)</sup></label>
+            <div class="col-md-4">
+              <select class="form-control" formControlName="branchId" [ngClass]="{ 'is-invalid': submitted && f.branchId.errors }">
+                <option value="">{{'cars.placeholder.select' | translate}}</option>
+                <option *ngFor="let branch of lstBranch;" [ngValue]="branch.id">{{branch.name}}</option>
+              </select>
+              <div *ngIf="submitted && f.branchId.errors">
+                <span class="msg-invalid" *ngIf="f.branchId.errors.required">{{'common.msg.required' | translate}}</span>
+              </div>
+            </div>
+          </div>
+          <div class="form-group row">
+            <label class="col-md-2 lbl-custome">{{'cars.ticket' | translate}}<sup class="msg-invalid">(*)</sup></label>
+            <div class="col-md-4">
+              <select class="form-control" formControlName="ticketId" [ngClass]="{ 'is-invalid': submitted && f.ticketId.errors }">
+                <option value="">{{'cars.placeholder.select' | translate}}</option>
+                <option *ngFor="let ticket of lstTicket;" [ngValue]="ticket.id">{{ticket.name}}</option>
+              </select>
+              <div *ngIf="submitted && f.ticketId.errors">
+                <span class="msg-invalid" *ngIf="f.ticketId.errors.required">{{'common.msg.required' | translate}}</span>
+              </div>
+            </div>
+          </div>
+        </fieldset>
+      </div>
+    </div>
+    <div class="card">
+      <div class="form-group row cl-mb cl-mlr">
+        <fieldset class="fieldset-custome-cars w100">
+          <legend class="legend-custome">{{'cars.carsDetail' | translate}}</legend>
+          <div class="form-group row">
+            <label class="col-md-2 lbl-custome">{{'cars.carType' | translate}}<sup class="msg-invalid">(*)</sup></label>
+            <div class="col-md-4">
+              <select class="form-control" formControlName="carTypeId">
+                <option value="">{{'cars.placeholder.select' | translate}}</option>
+                <option *ngFor="let carType of lstCarType;" [ngValue]="carType.id">{{carType.name}}</option> 
+              </select>
+              <div *ngIf="submitted && f.carTypeId.errors">
+                <span class="msg-invalid" *ngIf="f.carTypeId.errors.required">{{'common.msg.required' | translate}}</span>
+              </div>
+            </div>
+            <label class="col-md-2 lbl-custome">{{'cars.carColor' | translate}}<sup class="msg-invalid">(*)</sup></label>
+            <div class="col-md-4">
+              <input type="text" class="form-control" formControlName="color" [ngClass]="{ 'is-invalid': submitted && f.color.errors }" 
+              placeholder="{{'cars.placeholder.carColor' | translate}}">
+              <div *ngIf="submitted && f.color.errors">
+                <span class="msg-invalid" *ngIf="f.color.errors.required">{{'common.msg.required' | translate}}</span>
+              </div>
+            </div>
+          </div>
+          <div class="form-group row">
+            <label class="col-md-2 lbl-custome">{{'cars.countryOfManufacture' | translate}}<sup class="msg-invalid">(*)</sup></label>
+            <div class="col-md-4">
+              <input type="text" class="form-control" formControlName="countryOfManufacture" [ngClass]="{ 'is-invalid': submitted && f.countryOfManufacture.errors }" placeholder="{{'cars.placeholder.countryOfManufacture' | translate}}">
+              <div *ngIf="submitted && f.countryOfManufacture.errors">
+                <span class="msg-invalid" *ngIf="f.countryOfManufacture.errors.required">{{'common.msg.required' | translate}}</span>
+              </div>
+            </div>
+            <label class="col-md-2 lbl-custome">{{'cars.yearOfManufacture' | translate}}<sup class="msg-invalid">(*)</sup></label>
+            <div class="col-md-4">
+              <input type="text" class="form-control" formControlName="yearOfManufacture" onlyNumber 
+              [ngClass]="{ 'is-invalid': submitted && f.yearOfManufacture.errors }" placeholder="{{'cars.placeholder.yearOfManufacture' | translate}}">
+              <div *ngIf="submitted && f.yearOfManufacture.errors">
+                <span class="msg-invalid" *ngIf="f.yearOfManufacture.errors.required">{{'common.msg.required' | translate}}</span>
+                <span class="msg-invalid" *ngIf="f.yearOfManufacture.errors.maxlength">{{'common.maxlength' | translate}}</span>
+              </div>
+            </div>
+          </div>
+          <div class="form-group row">
+            <label class="col-md-2 lbl-custome">{{'cars.registryDate' | translate}}<sup class="msg-invalid">(*)</sup></label>
+            <div class="col-md-4">
+              <div class="input-group">
+                <input type="text" class="form-control datepicker" bsDatepicker [maxDate]="maxDate" #dpRegistryDate="bsDatepicker" 
+                placeholder="{{'cars.placeholder.date' | translate}}" formControlName="registryDate">
+                <div class="input-group-append">
+                  <button class="waves-effect waves-light input-group-text input-group-custome" (click)="dpRegistryDate.show()">
+                    <i class="fa fa-calendar" aria-hidden="true"></i>
+                  </button>
+                </div>
+              </div>
+              <div *ngIf="submitted && f.registryDate.errors">
+                <span class="msg-invalid" *ngIf="f.registryDate.errors.required">{{'common.msg.required' | translate}}</span>
+              </div>
+            </div>
+            <label class="col-md-2 lbl-custome">{{'cars.registryDateValid' | translate}}<sup class="msg-invalid">(*)</sup></label>
+            <div class="col-md-4">
+              <div class="input-group">
+                <input type="text" class="form-control datepicker" (ngModelChange)="validRegistryDate()" bsDatepicker #dpRegistryDateValid="bsDatepicker"
+                placeholder="{{'cars.placeholder.date' | translate}}" formControlName="registryDateValid">
+                <div class="input-group-append">
+                  <button class="waves-effect waves-light input-group-text input-group-custome" (click)="dpRegistryDateValid.show()">
+                    <i class="fa fa-calendar" aria-hidden="true"></i>
+                  </button>
+                </div>
+              </div>
+              <span class="msg-invalid" *ngIf="isRegistryDateValid">Ngày hết hạn đăng kiểm phải lớn hơn ngày đăng kiểm.</span>
+              <div *ngIf="submitted && f.registryDateValid.errors">
+                <span class="msg-invalid" *ngIf="f.registryDateValid.errors.required">{{'common.msg.required' | translate}}</span>
+              </div>
+            </div>
+          </div>
+          <div class="form-group row">
+            <label class="col-md-2 lbl-custome">{{'cars.weightTotal' | translate}}<sup class="msg-invalid">(*)</sup></label>
+            <div class="col-md-4">
+              <input type="text" class="form-control" formControlName="weightTotal" [ngClass]="{ 'is-invalid': submitted && f.weightTotal.errors }"
+              placeholder="{{'cars.placeholder.weightTotal' | translate}}" onlyNumber>
+              <div *ngIf="submitted && f.weightTotal.errors">
+                <span class="msg-invalid" *ngIf="f.weightTotal.errors.required">{{'common.msg.required' | translate}}</span>
+              </div>
+            </div>
+            <label class="col-md-2 lbl-custome">{{'cars.weightGoods' | translate}}<sup class="msg-invalid">(*)</sup></label>
+            <div class="col-md-4">
+              <input type="text" class="form-control" formControlName="weightGoods" [ngClass]="{ 'is-invalid': submitted && f.weightGoods.errors }" 
+              placeholder="{{'cars.placeholder.weightGoods' | translate}}" onlyNumber>
+              <div *ngIf="submitted && f.weightGoods.errors">
+                <span class="msg-invalid" *ngIf="f.weightGoods.errors.required">{{'common.msg.required' | translate}}</span>
+              </div>
+            </div>
+          </div>
+          <div class="form-group row">
+            <label class="col-md-2 lbl-custome">{{'cars.lifetimeLimit' | translate}}<sup class="msg-invalid">(*)</sup></label>
+            <div class="col-md-4">
+              <input type="text" class="form-control" formControlName="lifetimeLimit" [ngClass]="{ 'is-invalid': submitted && f.lifetimeLimit.errors }" 
+              placeholder="{{'cars.placeholder.lifetimeLimit' | translate}}">
+              <div *ngIf="submitted && f.lifetimeLimit.errors">
+                <span class="msg-invalid" *ngIf="f.lifetimeLimit.errors.required">{{'common.msg.required' | translate}}</span>
+              </div>
+            </div>
+            <label class="col-md-2 lbl-custome">{{'cars.firstRegisDate' | translate}}<sup class="msg-invalid">(*)</sup></label>
+            <div class="col-md-4">
+              <div class="input-group">
+                <input type="text" class="form-control datepicker" [maxDate]="maxDate" bsDatepicker #dpFirstRegisDate="bsDatepicker" 
+                placeholder="{{'cars.placeholder.date' | translate}}" formControlName="firstRegisDate">
+                <div class="input-group-append">
+                  <button class="waves-effect waves-light input-group-text input-group-custome" (click)="dpFirstRegisDate.show()">
+                    <i class="fa fa-calendar" aria-hidden="true"></i>
+                  </button>
+                </div>
+              </div>
+              <div *ngIf="submitted && f.firstRegisDate.errors">
+                <span class="msg-invalid" *ngIf="f.firstRegisDate.errors.required">{{'common.msg.required' | translate}}</span>
+              </div>
+            </div>
+          </div>
+          <div class="form-group row">
+            <label class="col-md-2 lbl-custome">{{'cars.avataUrl' | translate}}
+              <!-- <sup class="msg-invalid">(*)</sup> -->
+            </label>
+            <div class="col-md-4">
+              <div class="input-group">
+                <span class="input-view-data">{{f.avatarName.value}}</span>
+                <div class="input-group-append posRel">
+                  <ul class="list-inline input-group-text input-group-custome" *ngIf="clearAvatar">
+                    <li>
+                      <button class="waves-effect waves-light input-group-text input-group-custome-inline cl-pd" (click)="deletedAvatar()" tooltip="Xem ảnh">
+                        <i class="fa fa-picture-o" aria-hidden="true"></i>
+                      </button>
+                    </li>
+                    <li>
+                      <button class="waves-effect waves-light input-group-text input-group-custome-inline cl-pd" (click)="(downloadAvatar())" tooltip="Tải về máy">
+                        <i class="fa fa-download" aria-hidden="true"></i>
+                      </button>
+                    </li>
+                    <li>
+                      <button class="waves-effect waves-light input-group-text input-group-custome-inline cl-pd" (click)="deletedAvatar()" tooltip="Xóa ảnh đại diện">
+                        <i class="fa fa-trash-o" aria-hidden="true"></i>
+                      </button>
+                    </li>
+                  </ul>
+                  <button class="waves-effect waves-light input-group-text input-group-custome" (click)="file.click()" tooltip="Tải lên ảnh đại diện" *ngIf="!clearAvatar">
+                    <i class="fa fa-upload" aria-hidden="true"></i>
+                  </button>
+                  <input hidden type="file" #file (change)="onUploadAvatar($event)" accept="image/*" style="display: none;">
+                </div>
+              </div>
+            </div>
+          </div>
+        </fieldset>
+      </div>
+    </div>  
+  </form>
+</div>
+<div class="modal-footer">
+  <button type="button" class="btn btn-info mr-2" (click)="saveOrUpdate()">
+    <i class="fa fa-save"></i>
+    {{'common.btn.save' | translate}}
+  </button>
+  <button type="button" class="btn btn-danger" (click)="close()">
+    <i class="fa fa-times-circle"></i>
+    {{'common.btn.cancel' | translate}}
+  </button>
+</div>
+              

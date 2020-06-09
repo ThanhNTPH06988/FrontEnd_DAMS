@@ -1,0 +1,536 @@
+<!-- loading -->
+<div class="loading" *ngIf="loading">Loading&#8230;</div>
+
+<div class="modal-header modal-primary">
+  <h4 class="modal-title" [innerHTML]="title"></h4>
+  <button type="button" class="close" aria-label="Close" (click)="close()">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+
+<div class="modal-body">
+  <ul class="nav nav-tabs customtab" role="tablist">
+    <li class="nav-item">
+      <a class="nav-link active" data-toggle="tab" href="#single" role="tab">
+        <span class="hidden-sm-up"><i class="fa fa-user-o"></i></span>&nbsp;
+        <span class="hidden-xs-down">Nhân viên</span>
+      </a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" data-toggle="tab" href="#listExcel" role="tab">
+        <span class="hidden-sm-up"><i class="fa fa-file-excel-o"></i></span
+        >&nbsp;
+        <span class="hidden-xs-down">Danh sách excel</span>
+      </a>
+    </li>
+  </ul>
+  <div class="tab-content">
+    <!--single-->
+    <div class="tab-pane active" id="single" role="tabpanel">
+      <form class="form-horizontal pt-25" novalidate [formGroup]="staffForm">
+        <div class="form-group row">
+          <label class="col-md-2 lbl-custome"
+            >{{ "staff.code" | translate
+            }}<sup class="lable-required">(*)</sup></label
+          >
+          <div class="col-md-4">
+            <input
+              type="text"
+              class="form-control"
+              placeholder="{{ 'staff.placeholder.code' | translate }}"
+              [ngClass]="{ 'is-invalid': submitted && f.code.errors }"
+              formControlName="code"
+              [readonly]="isReadOnly"
+              trim
+              upper
+            />
+            <div *ngIf="submitted && f.code.errors">
+              <span class="msg-invalid" *ngIf="f.code.errors.required">{{
+                "common.msg.required" | translate
+              }}</span>
+              <span class="msg-invalid" *ngIf="f.code.errors.maxlength"
+                >Độ dài tối đa 50 ký tự</span
+              >
+              <span class="msg-invalid" *ngIf="f.code.errors.pattern"
+                >Mã nhân viên không chứa ký tự đặc biệt</span
+              >
+            </div>
+            <div *ngIf="submitted && isExitCode">
+              <span class="msg-invalid">Mã nhân viên đã tồn tại</span>
+            </div>
+          </div>
+          <label class="col-md-2 lbl-custome">Ảnh nhân viên</label>
+          <div class="col-md-4">
+            <div class="input-group">
+              <span class="input-view-data">{{ f.avatarName.value }}</span>
+              <div class="input-group-append posRel">
+                <button
+                  class="waves-effect waves-light input-group-text input-group-custome"
+                  (click)="deletedAvatar()"
+                  tooltip="Xóa ảnh đại diện"
+                  *ngIf="clearAvatar"
+                >
+                  <i class="fa fa-trash-o" aria-hidden="true"></i>
+                </button>
+                <button
+                  class="waves-effect waves-light input-group-text input-group-custome"
+                  (click)="file.click()"
+                  tooltip="Tải ảnh đại diện"
+                  *ngIf="!clearAvatar"
+                >
+                  <i class="fa fa-upload" aria-hidden="true"></i>
+                </button>
+                <input
+                  hidden
+                  type="file"
+                  #file
+                  (change)="onUploadAvatar($event)"
+                  accept="image/*"
+                  style="display: none;"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="form-group row">
+          <label class="col-md-2 lbl-custome"
+            >{{ "staff.name" | translate
+            }}<sup class="lable-required">(*)</sup></label
+          >
+          <div class="col-md-4">
+            <input
+              type="text"
+              class="form-control text-capitalize"
+              placeholder="{{ 'staff.placeholder.name' | translate }}"
+              [ngClass]="{ 'is-invalid': submitted && f.name.errors }"
+              formControlName="name"
+              trim="blur"
+            />
+            <div *ngIf="submitted && f.name.errors">
+              <span class="msg-invalid" *ngIf="f.email.errors.required">{{
+                "common.msg.required" | translate
+              }}</span>
+              <span class="msg-invalid" *ngIf="f.name.errors.maxlength"
+                >Độ dài tối đa 100 ký tự</span
+              >
+            </div>
+          </div>
+          <label class="col-md-2 lbl-custome"
+            >{{ "staff.birthday" | translate
+            }}<sup class="lable-required">(*)</sup></label
+          >
+          <div class="col-md-4">
+            <div class="input-group">
+              <input
+                type="text"
+                class="form-control datepicker"
+                placeholder="dd/mm/yyyy"
+                bsDatepicker
+                #dpTo="bsDatepicker"
+                [maxDate]="maxDate"
+                [ngClass]="{ 'is-invalid': submitted && f.dateOfBirth.errors }"
+                formControlName="dateOfBirth"
+              />
+              <div class="input-group-append">
+                <button
+                  class="waves-effect waves-light input-group-text input-group-custome"
+                  (click)="dpTo.show()"
+                >
+                  <i class="fa fa-calendar" aria-hidden="true"></i>
+                </button>
+              </div>
+            </div>
+            <div *ngIf="submitted && f.dateOfBirth.errors">
+              <span class="msg-invalid" *ngIf="f.dateOfBirth.errors.required">{{
+                "common.msg.required" | translate
+              }}</span>
+              <span
+                class="msg-invalid"
+                *ngIf="
+                  f.dateOfBirth.errors.pattern && !f.dateOfBirth.errors.required
+                "
+                >Ngày sinh không đúng định dạng</span
+              >
+            </div>
+          </div>
+        </div>
+        <div class="form-group row">
+          <label class="col-md-2 lbl-custome"
+            >{{ "staff.idCard" | translate
+            }}<sup class="lable-required">(*)</sup></label
+          >
+          <div class="col-md-4">
+            <input
+              type="text"
+              class="form-control"
+              placeholder="{{ 'staff.placeholder.idCard' | translate }}"
+              [ngClass]="{ 'is-invalid': submitted && f.idcard.errors }"
+              formControlName="idcard"
+              trim="blur"
+            />
+            <div *ngIf="submitted && f.idcard.errors">
+              <span class="msg-invalid" *ngIf="f.idcard.errors.required">{{
+                "common.msg.required" | translate
+              }}</span>
+              <span class="msg-invalid" *ngIf="f.idcard.errors.pattern"
+                >Số CMND là số</span
+              >
+              <span
+                class="msg-invalid"
+                *ngIf="f.idcard.errors.minlength && !f.idcard.errors.pattern"
+                >Độ dài tối thiểu 9 ký tự</span
+              >
+              <span
+                class="msg-invalid"
+                *ngIf="f.idcard.errors.maxlength && !f.idcard.errors.pattern"
+                >Độ dài tối đa 12 ký tự</span
+              >
+            </div>
+          </div>
+          <label class="col-md-2 lbl-custome"
+            >{{ "staff.email" | translate
+            }}<sup class="lable-required">(*)</sup></label
+          >
+          <div class="col-md-4">
+            <input
+              type="text"
+              class="form-control"
+              placeholder="{{ 'staff.placeholder.email' | translate }}"
+              formControlName="email"
+              [ngClass]="{ 'is-invalid': submitted && f.email.errors }"
+              trim="blur"
+            />
+            <div *ngIf="submitted && f.email.errors">
+              <span class="msg-invalid" *ngIf="f.email.errors.required">{{
+                "common.msg.required" | translate
+              }}</span>
+              <span class="msg-invalid" *ngIf="f.email.errors.maxlength"
+                >Độ dài tối đa 50 ký tự</span
+              >
+              <span
+                class="msg-invalid"
+                *ngIf="f.email.errors.pattern && !f.email.errors.maxlength"
+                >Email không đúng định dạng</span
+              >
+            </div>
+          </div>
+        </div>
+        <div class="form-group row">
+          <label class="col-md-2 lbl-custome"
+            >{{ "staff.phone" | translate
+            }}<sup class="lable-required">(*)</sup></label
+          >
+          <div class="col-md-4">
+            <input
+              type="text"
+              class="form-control"
+              placeholder="{{ 'staff.placeholder.phone' | translate }}"
+              formControlName="phoneNumber"
+              [ngClass]="{ 'is-invalid': submitted && f.phoneNumber.errors }"
+              trim="blur"
+            />
+            <div *ngIf="submitted && f.phoneNumber.errors">
+              <span class="msg-invalid" *ngIf="f.phoneNumber.errors.required">{{
+                "common.msg.required" | translate
+              }}</span>
+              <span class="msg-invalid" *ngIf="f.phoneNumber.errors.pattern"
+                >Số điện thoại là số</span
+              >
+              <span
+                class="msg-invalid"
+                *ngIf="
+                  f.phoneNumber.errors.minlength &&
+                  !f.phoneNumber.errors.pattern
+                "
+                >Độ dài tối thiểu 10 ký tự</span
+              >
+              <span
+                class="msg-invalid"
+                *ngIf="
+                  f.phoneNumber.errors.maxlength &&
+                  !f.phoneNumber.errors.pattern
+                "
+                >Độ dài tối đa 11 ký tự</span
+              >
+            </div>
+          </div>
+          <label class="col-md-2 lbl-custome"
+            >{{ "staff.position" | translate
+            }}<sup class="lable-required">(*)</sup></label
+          >
+          <div class="col-md-4">
+            <select
+              class="form-control"
+              [ngClass]="{ 'is-invalid': submitted && f.positionId.errors }"
+              formControlName="positionId"
+            >
+              <option value="">--Tất cả--</option>
+              <option
+                *ngFor="let stt of lstPosition; let i = index"
+                [ngValue]="stt.id"
+                >{{ stt.name }}</option
+              >
+            </select>
+            <div *ngIf="submitted && f.positionId.errors">
+              <span class="msg-invalid" *ngIf="f.positionId.errors.required">{{
+                "common.msg.required" | translate
+              }}</span>
+            </div>
+          </div>
+        </div>
+        <div class="form-group row">
+          <label class="col-md-2 lbl-custome"
+            >{{ "staff.province" | translate
+            }}<sup class="lable-required">(*)</sup></label
+          >
+          <div class="col-md-4">
+            <select
+              class="form-control"
+              (change)="getDistrict()"
+              [ngClass]="{ 'is-invalid': submitted && f.provinceCode.errors }"
+              formControlName="provinceCode"
+              tooltip="---Chọn tỉnh, thành phố---"
+            >
+              <option value="">{{
+                "staff.placeholder.selectProvince" | translate
+              }}</option>
+              <option
+                *ngFor="let pro of lstProvince; let i = index"
+                [ngValue]="pro.provinceCode"
+                >{{ pro.provinceName }}</option
+              >
+            </select>
+            <div *ngIf="submitted && f.provinceCode.errors">
+              <span
+                class="msg-invalid"
+                *ngIf="f.provinceCode.errors.required"
+                >{{ "common.msg.required" | translate }}</span
+              >
+            </div>
+          </div>
+          <label class="col-md-2 lbl-custome"
+            >{{ "staff.district" | translate
+            }}<sup class="lable-required">(*)</sup></label
+          >
+          <div class="col-md-4">
+            <select
+              class="form-control"
+              (change)="getWard()"
+              [ngClass]="{ 'is-invalid': submitted && f.districtCode.errors }"
+              formControlName="districtCode"
+              tooltip="---Chọn quận, huyện, thị xã---"
+            >
+              <option value="">{{
+                "staff.placeholder.selectDistrict" | translate
+              }}</option>
+              <option
+                *ngFor="let dist of lstDistrict; let i = index"
+                [ngValue]="dist.districtCode"
+                >{{ dist.districtName }}</option
+              >
+            </select>
+            <div *ngIf="submitted && f.districtCode.errors">
+              <span
+                class="msg-invalid"
+                *ngIf="f.districtCode.errors.required"
+                >{{ "common.msg.required" | translate }}</span
+              >
+            </div>
+          </div>
+        </div>
+        <div class="form-group row">
+          <label class="col-md-2 lbl-custome"
+            >{{ "staff.ward" | translate
+            }}<sup class="lable-required">(*)</sup></label
+          >
+          <div class="col-md-4">
+            <select
+              class="form-control"
+              [ngClass]="{ 'is-invalid': submitted && f.addrId.errors }"
+              formControlName="addrId"
+              tooltip="---Chọn xã, phường, thị trấn---"
+            >
+              <option value="">{{
+                "staff.placeholder.selectWard" | translate
+              }}</option>
+              <option
+                *ngFor="let ward of lstWard; let i = index"
+                [ngValue]="ward.id"
+                >{{ ward.wardName }}</option
+              >
+            </select>
+            <div *ngIf="submitted && f.addrId.errors">
+              <span class="msg-invalid" *ngIf="f.addrId.errors.required">{{
+                "common.msg.required" | translate
+              }}</span>
+            </div>
+          </div>
+          <label class="col-md-2 lbl-custome"
+            >{{ "staff.addrDetail" | translate
+            }}<sup class="lable-required">(*)</sup></label
+          >
+          <div class="col-md-4">
+            <input
+              type="text"
+              class="form-control"
+              placeholder="{{ 'staff.placeholder.addrDetail' | translate }}"
+              [ngClass]="{ 'is-invalid': submitted && f.addrDetail.errors }"
+              formControlName="addrDetail"
+              trim="blur"
+            />
+            <div *ngIf="submitted && f.addrDetail.errors">
+              <span class="msg-invalid" *ngIf="f.addrDetail.errors.required">{{
+                "common.msg.required" | translate
+              }}</span>
+              <span class="msg-invalid" *ngIf="f.addrDetail.errors.maxlength"
+                >Độ dài tối đa 100 ký tự</span
+              >
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+    <!--single-->
+
+    <!-- excel -->
+    <div class="tab-pane" id="listExcel" role="tabpanel">
+      <form class="form-horizontal pt-25" novalidate>
+        <div class="form-group row">
+          <label class="col-md-2 lbl-custome"
+            >{{ "staff.branchId" | translate }}&nbsp;<sup class="lable-required"
+              >(*)</sup
+            ></label
+          >
+          <div class="col-md-4">
+            <select class="form-control">
+              <option value="">----Chọn chi nhánh----</option>
+              <option
+                *ngFor="let bran of lstBranch; let i = index"
+                [ngValue]="bran.id"
+                >{{ bran.name }}</option
+              >
+            </select>
+          </div>
+          <label class="col-md-2 lbl-custome"
+            >File excel&nbsp;<sup class="lable-required">(*)</sup></label
+          >
+          <div class="col-md-4">
+            <div class="input-group">
+              <span class="input-view-data"></span>
+              <div class="input-group-append posRel">
+                <button
+                  class="waves-effect waves-light input-group-text input-group-custome"
+                  (click)="deletedAvatar()"
+                  tooltip="Tải lại file Excel"
+                  *ngIf="clearAvatar"
+                >
+                  <i class="fa fa-trash-o" aria-hidden="true"></i>
+                </button>
+                <button
+                  class="waves-effect waves-light input-group-text input-group-custome"
+                  (click)="file.click()"
+                  tooltip="Tải lên file Excel"
+                  *ngIf="!clearAvatar"
+                >
+                  <i class="fa fa-upload" aria-hidden="true"></i>
+                </button>
+                <input
+                  hidden
+                  type="file"
+                  #file
+                  (change)="onUploadAvatar($event)"
+                  accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"
+                  style="display: none;"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="form-group row">
+          <label class="col-md-2 lbl-custome">Tải về biểu mẫu</label>
+          <div class="col-md-4">
+            <span
+              class="input-view-data input-view-data-link"
+              (click)="downloadTemp()"
+              >BM_UPLOAD_STAFF</span
+            >
+          </div>
+        </div>
+      </form>
+      <div class="form-group row cl-mb cl-mlr">
+        <fieldset class="fieldset-custome w100">
+          <legend class="legend-custome">Danh sách nhân viên</legend>
+          <div class="table-responsive">
+            <table class="table table-bordered table-custome">
+              <thead>
+                <tr>
+                  <th class="text-center w1">{{ "staff.no" | translate }}</th>
+                  <th class="text-center w1">
+                    <input type="checkbox" />
+                  </th>
+                  <th class="text-center w8">{{ "staff.code" | translate }}</th>
+                  <th class="text-center w10">
+                    {{ "staff.name" | translate }}
+                  </th>
+                  <th class="text-center">{{ "staff.address" | translate }}</th>
+                  <th class="text-center w10">
+                    {{ "staff.birthday" | translate }}
+                  </th>
+                  <th class="text-center w10">
+                    {{ "staff.idCard" | translate }}
+                  </th>
+                  <th class="text-center w10">
+                    {{ "staff.phone" | translate }}
+                  </th>
+                  <th class="text-center w10">
+                    {{ "staff.status" | translate }}
+                  </th>
+                  <th class="text-center w8">
+                    {{ "staff.active" | translate }}
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                <!-- <tr *ngFor="let item of lstRecord;index as i">
+                  <td class="text-center">{{((page-1)*size)+(i+1)}}</td>
+                  <td>{{item.code}}</td>
+                  <td>{{item.name}}</td>
+                  <td>{{item.addrDetail}},{{item.addr.fullName}}</td>
+                  <td>{{item.dateOfBirth | date: 'dd/MM/yyyy'}}</td>
+                  <td>{{item.idcard}}</td>
+                  <td>{{item.phoneNumber}}</td>
+                  <td>{{item.status == 1 ? 'Hoạt động' : 'Không hoạt động'}}</td>
+                  <td class="text-center">
+                    <ul class="nav list-inline nav-center">
+                      <li tooltip="Thông tin chi tiết"><i class="fa fa-search"></i></li>
+                      <li tooltip="Sửa thông tin nhân viên" (click)="openDialog(item)" ><i class="fa fa-pencil-square-o" aria-hidden="true"></i></li>
+                      <li tooltip="Xóa thông tin nhân viên" (click)="confirmDeleted(item)"><i class="fa fa-trash-o" aria-hidden="true"></i></li>
+                    </ul>
+                  </td>
+                </tr> -->
+                <!-- *ngIf ="lstRecord.length === 0" -->
+                <tr>
+                  <td class="text-center" colspan="10">
+                    {{ "common.noresult" | translate }}
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </fieldset>
+      </div>
+    </div>
+    <!-- excel -->
+  </div>
+</div>
+
+<div class="modal-footer">
+  <button type="button" class="btn btn-info mr-2" (click)="saveOrUpdate()">
+    <i class="fa fa-save"></i>
+    Lưu
+  </button>
+  <button type="button" class="btn btn-danger" (click)="close()">
+    <i class="fa fa-times-circle"></i>
+    Đóng
+  </button>
+</div>

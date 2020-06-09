@@ -1,0 +1,141 @@
+<!-- loading -->
+<div class="loading" *ngIf="loading">Loading&#8230;</div>
+
+<div class="row page-titles">
+  <div class="col-md-12 align-self-center">
+    <div class="d-flex">
+      <ol class="breadcrumb">
+          <li class="breadcrumb-item"><a href="javascript:void(0)">{{'nav.home' | translate}}</a></li>
+          <li class="breadcrumb-item active">{{'nav.cars' | translate}}</li>
+      </ol>
+    </div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-header card-custome">
+    <h4 class="m-b-0 card-title">{{'common.search.title' | translate}}</h4>
+  </div>
+  <div class="card-body">
+    <form class="form-horizontal m-t-30"  novalidate [formGroup]="searchForm" >
+      <div class="form-group row">
+        <label class="col-md-2 lbl-custome" for="example-text">{{'cars.code' | translate}}</label>
+        <div class="col-md-4">
+          <input type="text" class="form-control" formControlName="code" placeholder="{{'cars.placeholder.code' | translate}}">
+        </div>
+        <label class="col-md-2 lbl-custome" for="example-text">{{'cars.name' | translate}}</label>
+        <div class="col-md-4">
+          <input type="text" class="form-control" formControlName="name" placeholder="{{'cars.placeholder.name' | translate}}">
+        </div>
+      </div>
+      <div class="form-group row">
+        <label class="col-md-2 lbl-custome" for="example-text">{{'cars.licenseNumber' | translate}}</label>
+        <div class="col-md-4">
+          <input type="text" class="form-control" formControlName="licenseNumber" placeholder="{{'cars.placeholder.licenseNumber' | translate}}">
+        </div>
+        <label class="col-md-2 lbl-custome" for="example-text">{{'cars.carType' | translate}}</label>
+        <div class="col-md-4">
+          <select class="form-control" formControlName="carTypeId">
+            <option value="">{{'cars.placeholder.selectSearch' | translate}}</option>
+            <option *ngFor="let carType of lstCarType;" [ngValue]="carType.id">{{carType.name}}</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-group row">
+        <label class="col-md-2 lbl-custome" for="example-text">{{'cars.ticket' | translate}}</label>
+        <div class="col-md-4">
+          <select class="form-control" formControlName="ticketId">
+            <option value="">{{'cars.placeholder.selectSearch' | translate}}</option>
+            <option *ngFor="let ticket of lstTicket;" [ngValue]="ticket.id">{{ticket.name}}</option>
+          </select>
+        </div>
+        <label class="col-md-2 lbl-custome" for="example-text">{{'cars.status' | translate}}</label>
+        <div class="col-md-4">
+          <select class="form-control" formControlName="status">
+            <option value="">{{'cars.placeholder.selectSearch' | translate}}</option>
+            <option *ngFor="let st of lstStatus;" [ngValue]="st.id">{{st.name}}</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-group text-center">
+        <button type="submit" class="btn btn-info waves-effect waves-light m-r-10" (click)="search(null)">
+          <i class="ti-search"></i>
+          {{'common.btn.search' | translate}}
+        </button>
+        <button type="submit" class="btn btn-success waves-effect waves-light" (click)="openDialog(null)">
+          <i class="ti-plus"></i>
+          {{'common.btn.addnew' | translate}}
+        </button>
+      </div>
+    </form>
+    
+  </div>
+</div>
+<div class="card">
+  <div class="card-header card-custome">
+    <h4 class="m-b-0 card-title">{{'common.search.result' | translate}}</h4>
+  </div>
+  <div class="card-body">
+    <!-- pagination -->
+    <div class="form-group pagination-custome">
+      <span class="search-title">{{'common.search.result' | translate}}<span class="lbl-bold"> {{totalRecord}}</span> {{'common.result' | translate}}</span>
+      <pagination class="pagi" [totalItems]="totalRecord" [itemsPerPage]="size" previousText="&lsaquo;"
+        nextText="&rsaquo;" firstText="&laquo;" lastText="&raquo;" [boundaryLinks]="true" [maxSize]="maxPageView">
+      </pagination>
+    </div>
+    <div class="table-responsive">
+      <table class="table table-bordered table-custome">
+        <thead>
+          <tr> 
+            <th class="text-center w1">{{'cars.no' | translate}}</th>
+            <th class="text-center">{{'cars.code' | translate}}</th>
+            <th class="text-center">{{'cars.name' | translate}}</th>
+            <th class="text-center">{{'cars.licenseNumber' | translate}}</th>
+            <th class="text-center">{{'cars.carType' | translate}}</th>
+            <th class="text-center">{{'cars.ticket' | translate}}</th>
+            <th class="text-center">{{'cars.status' | translate}}</th>
+            <th class="text-center">{{'cars.action' | translate}}</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let item of lstRecord;index as i">
+            <td class="text-center">{{((page-1)*size)+(i+1)}}</td>
+            <td class="text-left">{{item.code}}</td>
+            <td class="text-left">{{item.name}}</td>
+            <td class="text-left">{{item.licenseNumber}}</td>
+            <td class="text-left">{{item.carsType.name}}</td>
+            <td class="text-left">{{item.carsTicket.name}}</td>
+            <td class="text-left">
+              <span *ngIf="item.status === 1">Trống</span>
+              <span *ngIf="item.status === 2">Đã có lộ trình</span>
+              <span *ngIf="item.status === 3">Đã được duyệt</span>
+              <span *ngIf="item.status === 4">Đã xếp tiền</span>
+              <span *ngIf="item.status === 5">Đang di chuyển</span>
+              <span *ngIf="item.status === 6">Về kho</span>
+              <span *ngIf="item.status === 7">Nhập tiền vào kho</span>
+              <span *ngIf="item.status === 8">Hết hạn đăng kiểm</span>
+            </td>
+            <td class="text-center">
+              <ul class="nav list-inline nav-center">
+                <li tooltip="Sửa"><i class="fa fa-pencil-square-o" aria-hidden="true" (click)="openDialog(item)"></i></li>
+                <li tooltip="Xóa"><i class="fa fa-trash-o" aria-hidden="true" (click)="confirmDeletedCars(item)"></i></li>
+              </ul>
+            </td>
+          </tr>
+          <tr *ngIf="lstRecord.length===0">
+            <td class="text-center" colspan="9">{{'common.noresult' | translate}}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- pagination -->
+    <div class="form-group pagination-custome">
+      <pagination class="pagi" [totalItems]="totalRecord" [itemsPerPage]="size" previousText="&lsaquo;"
+        nextText="&rsaquo;" firstText="&laquo;" lastText="&raquo;" [boundaryLinks]="true" [maxSize]="maxPageView"
+        [(ngModel)]="page" (pageChanged)="searchRegisByCode($event)">
+      </pagination>
+    </div>
+
+  </div>
+</div>

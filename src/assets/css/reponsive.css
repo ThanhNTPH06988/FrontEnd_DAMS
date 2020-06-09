@@ -1,0 +1,25 @@
+@media (min-width: 992px){
+    /*custome model*/
+    .modal-lg, .modal-xl{
+        max-width: 75% !important;
+    }
+}
+@media (max-width: 767px){
+    .fieldset-left{
+        width: 100% !important;
+    }
+    .fieldset-center{
+        width: 100% !important;
+    }
+    .fieldset-right{
+        width: 100% !important;
+    }
+    .grant-button{
+        margin-top: 10px !important;
+        margin-bottom: 10px !important;
+    }
+    .grant-button li{
+        display: inline-block !important;
+        width: auto !important;
+    }
+}
